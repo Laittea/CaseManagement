@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.clients.router import router as clients_router
-
+from app.clients.database import create_clients_table  # input from database.py
 
 app = FastAPI()
 
@@ -17,4 +16,9 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+@app.on_event("startup")
+async def startup_event():
+    create_clients_table()
 
+if __name__ == "__main__":
+    create_clients_table()

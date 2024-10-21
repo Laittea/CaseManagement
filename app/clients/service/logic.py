@@ -28,10 +28,10 @@ model = pickle.load(open(filename, "rb"))
 def clean_input_data(data):
     #translate input into wahtever we trained the model on, numerical data in a specific order
     columns = ["age","gender","work_experience","canada_workex","dep_num",	"canada_born",	
-               "citizen_status",	"level_of_schooling",	"fluent_english",	"reading_english_scale",	
-               "speaking_english_scale",	"writing_english_scale",	"numeracy_scale",	"computer_scale",	
-               "transportation_bool",	"caregiver_bool",	"housing",	"income_source",	"felony_bool",	"attending_school",	
-               "currently_employed",	"substance_use",	"time_unemployed",	"need_mental_health_support_bool"]
+        "citizen_status",	"level_of_schooling",	"fluent_english",	"reading_english_scale",	
+        "speaking_english_scale",	"writing_english_scale",	"numeracy_scale",	"computer_scale",	
+        "transportation_bool",	"caregiver_bool",	"housing",	"income_source",	"felony_bool",	"attending_school",	
+        "currently_employed",	"substance_use",	"time_unemployed",	"need_mental_health_support_bool"]
     demographics = {
         'age': data['age'],
         'gender': data['gender'],
