@@ -4,4 +4,3 @@ The model works off of dummy data of several combinations of clients alongside t
 
 This also has an API file to interact with the front end, and logic in order to process the interventions coming from the front end. This includes functions to clean data, create a matrix of all possible combinations in order to get the ones with the highest increase of success, and output the results in a way the front end can interact with.
 
-# for testing edit access
