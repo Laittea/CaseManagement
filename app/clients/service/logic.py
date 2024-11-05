@@ -67,6 +67,16 @@ def clean_input_data(data):
     return output
 
 
+def clean_input_data_refactor(data):
+    # translate input into whatever we trained the model on, numerical data in a specific order
+    output = []
+    for k, v in data.items():
+        if isinstance(v, str):
+            v = convert_text(k, v)
+        output.append(v)
+    return output
+
+
 def convert_text(column, data:str):
     # Convert text answers from front end into digits
     # TODO: ensure that categorical columns match the valid answers in FormNew.jsx (L131)
@@ -197,7 +207,8 @@ def process_results(baseline, results):
     return output
 
 def interpret_and_calculate(data):
-    raw_data = clean_input_data(data)
+    # raw_data = clean_input_data(data)
+    raw_data = clean_input_data_refactor(data)
     baseline_row = get_baseline_row(raw_data)
     baseline_row = baseline_row.reshape(1, -1)
     print("BASELINE ROW IS",baseline_row)
@@ -220,9 +231,11 @@ def interpret_and_calculate(data):
     print(f"RESULTS: {results}")
     return results
 
-if __name__ == "__main__":
-    print("running")
-    data = {
+
+#################### Test Data and Methods ####################
+
+
+test_data = {
         "age": "23",
         "gender": "1",
         "work_experience": "1",
@@ -248,7 +261,26 @@ if __name__ == "__main__":
         "time_unemployed": "1",
         "need_mental_health_support_bool": "1"
     }
+
+def test_clean_input_data():
+    print("\n#################### test_clean_input_data() ####################")
+    output_origin = clean_input_data(test_data)
+    output_refactor = clean_input_data_refactor(test_data)
+    l1, l2 = len(output_origin), len(output_refactor)
+    if l1 != l2:
+        print("FAIL: len not equals\n")
+        return
+    for i in range(l1):
+        origin, refactor = output_origin[i], output_refactor[i]
+        if type(origin) != type(refactor) or origin != refactor:
+            print("FAIL: the {} th element not equals. origin:{}, refactor:{}\n".format(i, origin, refactor))
+            return
+    print("PASS\n")
+
+
+if __name__ == "__main__":
+    print("running")
     # print(data)
-    results = interpret_and_calculate(data)
+    results = interpret_and_calculate(test_data)
     print(results)
 

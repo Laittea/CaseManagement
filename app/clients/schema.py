@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 
 class PredictionInput(BaseModel):
     age: int
@@ -25,3 +25,8 @@ class PredictionInput(BaseModel):
     substance_use: str
     time_unemployed: int
     need_mental_health_support_bool: str
+
+    # @field_serializer('gender')
+    # def serialize_age(self, gender):
+    #     gender
+
