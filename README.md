@@ -6,36 +6,53 @@ This also has an API file to interact with the front end, and logic in order to 
 
 
 
-## Running the FastAPI project
+## Run the FastAPI project
 
-- The project was opened and edited in PyCharm, an virtual environment was created and Python 3.10 was selected as the default inpterpretor
-- Dependencies defined in the `/app/requirements.txt` file will be auto-installed PyCharm when the project was opened for the first time, this may take a while to complete
-- To run the FastAPI project, open the terminal in PyCharm and
-  - change the working directory into `/app`
-  - run the command `fastapi dev main.py`
+- Clone the git repo
 
 ```bash
-(venv) (base) ➜  CommonAssessmentTool-Group-Thoughtful git:(criteria2) ✗ pwd
-/Users/jiayangliu/Documents/neu_csa/CS5500/CommonAssessmentTool-Group-Thoughtful
-
-(venv) (base) ➜  CommonAssessmentTool-Group-Thoughtful git:(criteria2) ✗ cd ./app 
-
-(venv) (base) ➜  app git:(criteria2) ✗ fastapi dev main.py 
+# clone the project from git repo
+git clone https://github.com/JiayangLJY/CommonAssessmentTool-Group-Thoughtful.git
 ```
 
-By running the commands above, the FastAPI project will run in a dev environment and you can see outputs in the terminal like this:
+
+
+* Prepare the virtual environment
 
 ```bash
-...
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [74554] using WatchFiles
-...
-...
-INFO:     Started server process [74558]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
+# cd to the project root dir
+cd CommonAssessmentTool-Group-Thoughtful
+
+# create a virtual env for the current project
+python3 -m venv venv
+
+# activate the virtual env
+source venv/bin/activate
+
+# install denpendency packages
+pip install -r requirements.txt
+
+# export python path
+export PYTHONPATH=$(pwd):$PYTHONPATH
 ```
 
-Which means the application was successfully started up at the port 8000 on your local machine
+> - to deactivate the current virtual env:
+>
+>   ```bash
+>   deactivate
+>   ```
+
+
+
+- Run Fastapi application
+
+```bash
+# cd to the {project}/app dir
+cd app
+
+# run project in dev mode
+fastapi dev main.py 
+```
 
 - Then open the url `http://127.0.0.1:8000/docs` in the browser to view the doc page of the current running project
+
