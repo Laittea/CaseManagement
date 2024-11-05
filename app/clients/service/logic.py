@@ -119,6 +119,17 @@ def convert_text(column, data:str):
             'Employment': 8,
             'Self-Employment': 9,
             'Other (specify)': 10
+        },
+        # gender
+        {
+            'M': 1,
+            'F': 2
+        },
+        # citizen
+        {
+            'citizen': 0,
+            'permanent_resident': 1,
+            'temporary_resident': 2
         }
     ]
     for category in categorical_cols_integers:
