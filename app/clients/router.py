@@ -9,7 +9,7 @@ router = APIRouter(prefix="/clients", tags=["clients"])
 @router.post("/predictions")
 async def predict(data: PredictionInput):
     print("HERE")
-    print(data.model_dump())
-    return interpret_and_calculate(data.model_dump())
+    print(data.model_dump(by_alias=True))
+    return interpret_and_calculate(data.model_dump(by_alias=True))
 
 

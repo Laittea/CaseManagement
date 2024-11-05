@@ -5,6 +5,8 @@ import numpy as np
 import pickle
 from itertools import combinations_with_replacement
 from itertools import product
+from pydantic import BaseModel
+from app.clients.schema import PredictionInput
 
 column_intervention = [
     'Life Stabilization',
@@ -234,7 +236,7 @@ def interpret_and_calculate(data):
 
 #################### Test Data and Methods ####################
 
-
+# validated dict data for test
 test_data = {
         "age": "23",
         "gender": "1",
@@ -262,9 +264,39 @@ test_data = {
         "need_mental_health_support_bool": "1"
     }
 
+# raw data from front end
+test_model = {
+    "age": "18",
+    "gender": "M",
+    "work_experience": "3",
+    "canada_workex": 0,
+    "dep_num": "1",
+    "canada_born": "true",
+    "citizen_status": "citizen",
+    "level_of_schooling": "Grade 12 or equivalent",
+    "fluent_english": "true",
+    "reading_english_scale": "3",
+    "speaking_english_scale": "1",
+    "writing_english_scale": "3",
+    "numeracy_scale": 0,
+    "computer_scale": "2",
+    "transportation_bool": "false",
+    "caregiver_bool": "true",
+    "housing": "Living with family/friend",
+    "income_source": "No Source of Income",
+    "felony_bool": "true",
+    "attending_school": "false",
+    "currently_employed": "true",
+    "substance_use": "true",
+    "time_unemployed": "1",
+    "need_mental_health_support_bool": "false"
+}
+
+
 def test_clean_input_data():
     print("\n#################### test_clean_input_data() ####################")
-    output_origin = clean_input_data(test_data)
+    # the original output data is derived from test_data
+    output_origin = [23, 1, 1, 1, 0, 1, 2, 2, 3, 2, 2, 3, 2, 3, 2, 1, 1, 5, 1, 0, 1, 1, 1, 1]
     output_refactor = clean_input_data_refactor(test_data)
     l1, l2 = len(output_origin), len(output_refactor)
     if l1 != l2:
@@ -276,6 +308,14 @@ def test_clean_input_data():
             print("FAIL: the {} th element not equals. origin:{}, refactor:{}\n".format(i, origin, refactor))
             return
     print("PASS\n")
+
+
+def test_alias():
+    print("\n#################### test_alias() ####################")
+    model_refactor = PredictionInput(**test_model)
+    data_refactor = model_refactor.model_dump(by_alias=True)
+    print()
+    print(data_refactor)
 
 
 if __name__ == "__main__":
