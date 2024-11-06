@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from datetime import date
+from typing import Optional
 
 class PredictionInput(BaseModel):
     age: int
@@ -25,3 +27,13 @@ class PredictionInput(BaseModel):
     substance_use: str
     time_unemployed: int
     need_mental_health_support_bool: str
+
+class Client(BaseModel):
+    # ID will be auto-generated in a MangoDB database setup
+    id: int  
+    first_name: str
+    last_name: str
+    email: str
+    date_of_birth: date
+    address: Optional[str] = None
+    phone: Optional[str] = None
