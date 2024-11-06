@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from .config import DATABASE_URL  # Importing the database URL from config
+from app.config import DATABASE_URL  # Importing the database URL from config
 
 # SQLAlchemy Base class for model definitions
 Base = declarative_base()
