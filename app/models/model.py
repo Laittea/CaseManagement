@@ -3,7 +3,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey
 from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
-from app.database.databse import Base
+from app.database.database import Base
 
 
 # Enum classes for role types
