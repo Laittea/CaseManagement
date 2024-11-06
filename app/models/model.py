@@ -33,7 +33,8 @@ class User(Base):
 class Candidate(Base):
     __tablename__ = "candidates"
 
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     application_date = Column(DateTime, nullable=False)
     application_status = Column(String, nullable=False)
 
@@ -46,7 +47,8 @@ class Candidate(Base):
 class Recruiter(Base):
     __tablename__ = "recruiters"
 
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     # Relationship
     user = relationship("User", back_populates="recruiter")
@@ -56,7 +58,8 @@ class Recruiter(Base):
 class Admin(Base):
     __tablename__ = "admins"
 
-    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     # Relationship
     user = relationship("User", back_populates="admin")

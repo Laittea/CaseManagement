@@ -24,7 +24,7 @@ class CandidateBase(UserBase):
     applicationStatus: str
 
 class CandidateCreate(CandidateBase):
-    pass
+    user_id: int
 
 class CandidateResponse(CandidateBase):
     id: int
@@ -34,7 +34,7 @@ class CandidateResponse(CandidateBase):
 
 # Recruiter schema
 class RecruiterBase(UserBase):
-    pass
+    user_id: int
 
 class RecruiterCreate(RecruiterBase):
     password: str
