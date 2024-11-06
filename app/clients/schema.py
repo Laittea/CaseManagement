@@ -38,3 +38,11 @@ class Client(BaseModel):
     date_of_birth: date
     address: Optional[str] = None
     phone: Optional[str] = None
+
+class ClientUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None

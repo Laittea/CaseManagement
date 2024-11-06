@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from typing import List
 
 from app.clients.service.logic import interpret_and_calculate
-from app.clients.schema import PredictionInput, Client
+from app.clients.schema import PredictionInput, Client, ClientUpdate
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
@@ -61,3 +61,16 @@ async def delete_client_by_id(id: int):
 async def delete_all_clients():
     mock_clients_db.clear()
     return {"message": "All clients deleted successfully."}
+
+
+@router.put("/clients/{id}", response_model=Client, summary="Update client by ID")
+async def update_client(id: int, client_data: ClientUpdate):
+    client = mock_clients_db.get(id)
+    if client is None:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    updated_fields = client_data.model_dump(exclude_unset=True)
+    updated_client = client.model_copy(update=updated_fields)
+    mock_clients_db[id] = updated_client
+    
+    return updated_client
