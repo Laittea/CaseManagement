@@ -28,11 +28,13 @@ mock_clients_db = {
     ),
 }
 
+
 @router.post("/predictions")
 async def predict(data: PredictionInput):
     print("HERE")
     print(data.model_dump())
     return interpret_and_calculate(data.model_dump())
+
 
 @router.get("/clients/{id}", response_model=Client, summary="Retrieve client by ID")
 async def get_client_by_id(id: int):
@@ -41,6 +43,21 @@ async def get_client_by_id(id: int):
         raise HTTPException(status_code=404, detail="Client not found")
     return client
 
+
 @router.get("/clients", response_model=List[Client], summary="Retrieve all clients")
 async def get_all_clients():
     return list(mock_clients_db.values())
+
+
+@router.delete("/clients/{id}", response_model=None, summary="Delete client by ID")
+async def delete_client_by_id(id: int):
+    client = mock_clients_db.pop(id, None)
+    if client is None:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return {"message": f"Client with ID {id} deleted successfully."}
+
+
+@router.delete("/clients", response_model=None, summary="Delete all clients")
+async def delete_all_clients():
+    mock_clients_db.clear()
+    return {"message": "All clients deleted successfully."}
