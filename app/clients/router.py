@@ -29,11 +29,15 @@ mock_clients_db = {
 }
 
 
-@router.post("/predictions")
-async def predict(data: PredictionInput):
-    print("HERE")
-    print(data.model_dump())
-    return interpret_and_calculate(data.model_dump())
+def generate_new_id():
+    return max(mock_clients_db.keys(), default=0) + 1
+
+@router.post("/create", response_model=Client, summary="Create a new client")
+async def create_client(client_data: Client):
+    new_id = generate_new_id()
+    client_data.id = new_id  # Set new client ID
+    mock_clients_db[new_id] = client_data
+    return client_data
 
 
 @router.get("/clients/{id}", response_model=Client, summary="Retrieve client by ID")
