@@ -1,10 +1,11 @@
 from pydantic import BaseModel, Field, field_serializer, model_serializer
 
+
 class PredictionInput(BaseModel):
     """
     PredictionInput is the validated input from webpage users
 
-    FILED ORDER is preserved in the model schema, which will represent the same order when calling the prediction model
+    The serialization_alias of each filed MUST be identical to the column name in dotenv file
 
     validation_alias is used for validating the json format data sending from front end
     serialization_alias is used as column name when dumping the data model

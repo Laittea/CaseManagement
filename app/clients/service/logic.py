@@ -1,12 +1,9 @@
-from typing import List
-import pandas as pd
-import json
 import numpy as np
 import pickle
-from itertools import combinations_with_replacement
 from itertools import product
-from pydantic import BaseModel
 from app.clients.schema import PredictionInput
+from app.clients.util import util_get_cols
+
 
 column_intervention = [
     'Life Stabilization',
@@ -28,9 +25,7 @@ model = pickle.load(open(filename, "rb"))
 
 
 def convert_none_bool(value):
-    """
-    convert None to 0, True to 1, False to 0
-    """
+    """convert None to 0, True to 1, False to 0"""
     if value is None:
         return 0
     if type(value) == bool:
@@ -39,10 +34,9 @@ def convert_none_bool(value):
         return value
 
 
-def clean_input_data(data):
-    # TODO: keep the field order the same as in model.py by reading a config file
-    output = [convert_none_bool(v) for v in data.values()]
-    return output
+def clean_input_data(data, features):
+    """retrieve values from {data} following in the ORDER defined by {features}"""
+    return [convert_none_bool(data.get(feat)) for feat in features]
 
 
 # creates 128 possible combinations in order to run every possibility through model
@@ -105,7 +99,7 @@ def process_results(baseline, results):
 
 
 def interpret_and_calculate(data):
-    raw_data = clean_input_data(data)
+    raw_data = clean_input_data(data, util_get_cols())
     baseline_row = get_baseline_row(raw_data)
     baseline_row = baseline_row.reshape(1, -1)
     print("BASELINE ROW IS", baseline_row)
@@ -159,14 +153,13 @@ test_model = {
     "need_mental_health_support_bool": "false"
 }
 
-# validated dict data for test (unconverted)
-test_data = {'age': 18, 'gender': 1, 'work_experience': 3, 'canada_workex': 0, 'dep_num': 1, 'canada_born': 1,
-             'citizen_status': 0, 'level_of_schooling': 'Grade 12 or equivalent', 'fluent_english': 'true',
-             'reading_english_scale': 3, 'speaking_english_scale': 1, 'writing_english_scale': 3, 'numeracy_scale': 0,
-             'computer_scale': 2, 'transportation_bool': 'false', 'caregiver_bool': 'true',
-             'housing': 'Living with family/friend', 'income_source': 'No Source of Income', 'felony_bool': 'true',
-             'attending_school': 'false', 'currently_employed': 'true', 'substance_use': 'true', 'time_unemployed': 1,
-             'need_mental_health_support_bool': 'false'}
+# the converted data
+test_converted = {'age': 18, 'gender': 1, 'work_experience': 3, 'canada_workex': 0, 'dep_num': 1, 'canada_born': True,
+                  'citizen_status': 0, 'level_of_schooling': 5, 'fluent_english': True, 'reading_english_scale': 3,
+                  'speaking_english_scale': 1, 'writing_english_scale': 3, 'numeracy_scale': 0, 'computer_scale': 2,
+                  'transportation_bool': False, 'caregiver_bool': True, 'housing': 5, 'income_source': 1,
+                  'felony_bool': True, 'attending_school': False, 'currently_employed': True, 'substance_use': True,
+                  'time_unemployed': 1, 'need_mental_health_support_bool': False}
 
 # output after data converting
 test_output = [18, 1, 3, 0, 1, 1, 0, 5, 1, 3, 1, 3, 0, 2, 0, 1, 5, 1, 1, 0, 1, 1, 1, 0]
@@ -180,21 +173,42 @@ test_prediction_result = {
         (69.0, ["Life Stabilization", "Specialized Services"])]
 }
 
+# ordered features for test
+test_features = ['age', 'gender', 'work_experience', 'canada_workex', 'dep_num', 'canada_born', 'citizen_status',
+                      'level_of_schooling', 'fluent_english', 'reading_english_scale', 'speaking_english_scale',
+                      'writing_english_scale', 'numeracy_scale', 'computer_scale', 'transportation_bool',
+                      'caregiver_bool', 'housing', 'income_source', 'felony_bool', 'attending_school',
+                      'currently_employed', 'substance_use', 'time_unemployed', 'need_mental_health_support_bool']
 
-def test_data_type_conversion():
-    """test the conversion of diff data types"""
-    print("\n#################### test_data_type_conversion() ####################")
-    model_refactor = PredictionInput(**test_model)
-    output_refactor = model_refactor.model_dump(by_alias=True)
-    output_refactor = [v for v in output_refactor.values()]
 
-    if len(test_output) != len(output_refactor):
+def get_data():
+    return PredictionInput(**test_model).model_dump(by_alias=True)
+
+
+def test_dump_model():
+    """test to check the dumped model"""
+    print("\n#################### test_dump_model() ####################")
+    refactor_converted = get_data()
+    if refactor_converted == test_converted:
+        print("PASS\n")
+    else:
+        print("FAIL\n")
+
+
+def test_clean_input_data():
+    """test data type conversion"""
+    print("\n#################### test_clean_input_data() ####################")
+    data = get_data()
+    refactor_output = clean_input_data(data, test_features)
+
+    if len(test_output) != len(refactor_output):
         print("FAIL: len not equals\n")
         return
 
     for i in range(len(test_output)):
-        if test_output[i] != output_refactor[i]:
-            print("FAIL: the {} th element not equals. origin:{}, refactor:{}\n".format(i, test_output[i], output_refactor[i]))
+        if test_output[i] != refactor_output[i]:
+            print("FAIL: the {} th element not equals. origin:{}, refactor:{}\n".format(i, test_output[i],
+                                                                                        refactor_output[i]))
             return
     print("PASS\n")
 
@@ -202,10 +216,8 @@ def test_data_type_conversion():
 def test_prediction():
     """test the whole prediction process"""
     print("\n#################### test_prediction() ####################")
-    model_refactor = PredictionInput(**test_model)
-    output_refactor = model_refactor.model_dump(by_alias=True)
-    result = interpret_and_calculate(output_refactor)
-    # print(result)
+    data = get_data()
+    result = interpret_and_calculate(data)
     if result == test_prediction_result:
         print("PASS\n")
     else:
