@@ -11,5 +11,3 @@ async def predict(data: PredictionInput):
     print("HERE")
     print(data.model_dump())
     return interpret_and_calculate(data.model_dump())
-
-

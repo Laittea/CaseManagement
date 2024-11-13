@@ -16,7 +16,7 @@ class UserResponse(UserBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Candidate schema
 class CandidateBase(UserBase):
@@ -28,9 +28,10 @@ class CandidateCreate(CandidateBase):
 
 class CandidateResponse(CandidateBase):
     id: int
+    user: UserResponse
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Recruiter schema
 class RecruiterBase(UserBase):
@@ -43,7 +44,7 @@ class RecruiterResponse(RecruiterBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Admin schema
 class AdminBase(UserBase):
@@ -56,7 +57,7 @@ class AdminResponse(AdminBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # DetailedInfo schema
 class DetailedInfoBase(BaseModel):
@@ -94,4 +95,4 @@ class DetailedInfoResponse(DetailedInfoBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

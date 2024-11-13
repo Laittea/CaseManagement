@@ -1,4 +1,4 @@
-from logic import interpret_and_calculate
+from app.clients.service.logic import interpret_and_calculate
 from itertools import combinations_with_replacement
 
 # def test_interpret_and_calculate():
