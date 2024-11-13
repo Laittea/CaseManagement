@@ -40,26 +40,6 @@ def prepare_models():
     return rf_model_baseline
 
 
-#################### Test Data and Methods ####################
-
-# original order of columns:
-test_original_cols = ['age', 'gender', 'work_experience', 'canada_workex', 'dep_num', 'canada_born', 'citizen_status',
-                      'level_of_schooling', 'fluent_english', 'reading_english_scale', 'speaking_english_scale',
-                      'writing_english_scale', 'numeracy_scale', 'computer_scale', 'transportation_bool',
-                      'caregiver_bool', 'housing', 'income_source', 'felony_bool', 'attending_school',
-                      'currently_employed', 'substance_use', 'time_unemployed', 'need_mental_health_support_bool']
-
-
-def test_column_order():
-    print("\n#################### test_data_type_conversion() ####################")
-    cols = util_get_cols()
-    # print(cols)
-    if cols == test_original_cols:
-        print("PASS")
-    else:
-        print("FAIL")
-
-
 def main():
     print("Start model.")
     model = prepare_models()
