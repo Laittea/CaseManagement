@@ -4,6 +4,9 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+from app.models.model import UserRole
+
+
 # Common fields for all users
 class UserBase(BaseModel):
     name: str
@@ -11,6 +14,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    role: UserRole
 
 class UserResponse(UserBase):
     id: int

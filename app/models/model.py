@@ -24,9 +24,9 @@ class User(Base):
     role = Column(Enum(UserRole), nullable=False)
 
     # Relationships
-    candidate = relationship("Candidate", back_populates="user")
-    recruiter = relationship("Recruiter", back_populates="user")
-    admin = relationship("Admin", back_populates="user")
+    candidate = relationship("Candidate", back_populates="user", cascade="all, delete", passive_deletes=True)
+    recruiter = relationship("Recruiter", back_populates="user", cascade="all, delete", passive_deletes=True)
+    admin = relationship("Admin", back_populates="user", cascade="all, delete", passive_deletes=True)
 
 
 # Candidate model
