@@ -1,7 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session, joinedload
 
-from app.crud.user_crud import create_user
+from app.exceptions import UserNotFoundError
 from app.models.model import Candidate, User
 from app.schema.schema import CandidateCreate, CandidateResponse, UserCreate
 
@@ -9,9 +9,9 @@ from app.schema.schema import CandidateCreate, CandidateResponse, UserCreate
 # Create a new candidate
 def create_candidate(db: Session, candidate: CandidateCreate) -> CandidateResponse:
     db_user = db.query(User).filter(User.email == candidate.user_id).first()
+
     if not db_user:
-        user_create = UserCreate(name=candidate.user_id, email=candidate.user_id, password="default_password")
-        db_user = create_user(db, user_create)
+        raise UserNotFoundError(f"User with email {candidate.user_id} does not exist.")
 
     db_candidate = Candidate(
         application_date=candidate.applicationDate,
