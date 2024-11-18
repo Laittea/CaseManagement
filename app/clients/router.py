@@ -12,4 +12,7 @@ async def predict(data: PredictionInput):
     print(data.model_dump())
     return interpret_and_calculate(data.model_dump())
 
-
+@router.delete("/{client_id}")
+async def delete_client_endpoint(client_id: str):
+    print(f"Delete client: {client_id}")
+    return await delete_client(client_id)
