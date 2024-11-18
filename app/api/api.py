@@ -9,8 +9,8 @@ from app.database.database import get_db
 from app.exceptions import UserNotFoundError
 from app.schema.schema import CandidateCreate, CandidateResponse, DetailedInfoCreate, DetailedInfoResponse, \
     UserResponse, UserCreate
-from app.crud.candidate_crud import create_candidate, get_candidate, get_all_candidates, update_application_status, delete_candidate
-from app.crud.detailed_info_crud import create_detailed_info, get_detailed_info_by_candidate, update_detailed_info, delete_detailed_info
+from crud.candidate_crud import create_candidate, get_candidate, get_all_candidates, update_application_status, delete_candidate
+from crud.detailed_info_crud import create_detailed_info, get_detailed_info_by_candidate, update_detailed_info, delete_detailed_info
 
 router = APIRouter()
 

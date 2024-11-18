@@ -1,5 +1,3 @@
-# user_crud.py
-
 from sqlalchemy.orm import Session
 from app.models.model import User
 from app.schema.schema import UserCreate
