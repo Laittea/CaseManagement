@@ -3,7 +3,7 @@ import pickle
 from itertools import product
 from app.clients.schema import PredictionInput
 from app.clients.util import util_get_cols
-
+import os
 
 column_intervention = [
     'Life Stabilization',
@@ -15,9 +15,6 @@ column_intervention = [
     'Enhanced Referrals for Skills Development'
 ]
 
-# loads the model into logic
-
-import os
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 filename = os.path.join(current_dir, 'model.pkl')
@@ -74,7 +71,6 @@ def intervention_row_to_names(row):
 
 
 def process_results(baseline, results):
-    ##Example:
     """
     {
         baseline_probability: 80 #baseline percentage point with no interventions
@@ -107,7 +103,7 @@ def interpret_and_calculate(data):
     baseline_prediction = model.predict(baseline_row)
     intervention_predictions = model.predict(intervention_rows)
     intervention_predictions = intervention_predictions.reshape(-1, 1)  # want shape to be a vertical column, not a row
-    result_matrix = np.concatenate((intervention_rows, intervention_predictions), axis=1)  ##CHANGED AXIS
+    result_matrix = np.concatenate((intervention_rows, intervention_predictions), axis=1)  # CHANGED AXIS
 
     # sort this matrix based on prediction
     # print("RESULT SAMPLE::", result_matrix[:5])
@@ -122,8 +118,6 @@ def interpret_and_calculate(data):
     print(f"RESULTS: {results}")
     return results
 
-
-#################### Test Data and Methods ####################
 
 # raw data from front end
 test_model = {
@@ -222,4 +216,3 @@ def test_prediction():
         print("PASS\n")
     else:
         print("FAIL\n")
-
