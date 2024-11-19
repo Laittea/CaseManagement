@@ -10,7 +10,8 @@ from app.exceptions import UserNotFoundError
 from app.schema.schema import CandidateCreate, CandidateResponse, DetailedInfoCreate, DetailedInfoResponse, \
     UserResponse, UserCreate
 from app.crud.candidate_crud import create_candidate, get_candidate, get_all_candidates, update_application_status, delete_candidate
-from app.crud.detailed_info_crud import create_detailed_info, get_detailed_info_by_candidate, update_detailed_info, delete_detailed_info
+from app.crud.detailed_info_crud import create_detailed_info, get_detailed_info_by_candidate, update_detailed_info, \
+    delete_detailed_info, get_detailed_info_by_id
 
 router = APIRouter()
 
@@ -135,25 +136,83 @@ def delete_candidate_route(candidate_id: int, db: Session = Depends(get_db)):
 
 @router.post("/detailed_info/", response_model=DetailedInfoResponse)
 def create_detailed_info_route(detailed_info: DetailedInfoCreate, candidate_id: int, db: Session = Depends(get_db)):
-    return create_detailed_info(db=db, detailed_info=detailed_info, candidate_id=candidate_id)
-
+    try:
+        db_candidate = get_candidate(db=db, candidate_id=candidate_id)
+        if not db_candidate:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Candidate with ID {candidate_id} does not exist.",
+            )
+        return create_detailed_info(db=db, detailed_info=detailed_info, candidate_id=candidate_id)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while creating detailed info: {str(e)}",
+        )
 @router.get("/detailed_info/{candidate_id}", response_model=DetailedInfoResponse)
 def get_detailed_info_by_candidate_route(candidate_id: int, db: Session = Depends(get_db)):
-    db_detailed_info = get_detailed_info_by_candidate(db=db, candidate_id=candidate_id)
-    if db_detailed_info is None:
-        raise HTTPException(status_code=404, detail="Detailed info not found for this candidate")
-    return db_detailed_info
+    try:
+        db_candidate = get_candidate(db=db, candidate_id=candidate_id)
+        if not db_candidate:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Candidate with ID {candidate_id} does not exist.",
+            )
+        db_detailed_info = get_detailed_info_by_candidate(db=db, candidate_id=candidate_id)
+        if not db_detailed_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Detailed info not found for candidate ID {candidate_id}.",
+            )
+        return db_detailed_info
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {str(e)}",
+        )
 
 @router.put("/detailed_info/{detailed_info_id}", response_model=DetailedInfoResponse)
 def update_detailed_info_route(detailed_info_id: int, updated_info: DetailedInfoCreate, db: Session = Depends(get_db)):
-    db_detailed_info = update_detailed_info(db=db, detailed_info_id=detailed_info_id, updated_info=updated_info)
-    if db_detailed_info is None:
-        raise HTTPException(status_code=404, detail="Detailed info not found")
-    return db_detailed_info
+    try:
+        db_detailed_info = get_detailed_info_by_id(db=db, detailed_info_id=detailed_info_id)
+        if not db_detailed_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Detailed info with ID {detailed_info_id} does not exist.",
+            )
+        return update_detailed_info(db=db, detailed_info_id=detailed_info_id, updated_info=updated_info)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {str(e)}",
+        )
 
 @router.delete("/detailed_info/{detailed_info_id}", response_model=dict)
 def delete_detailed_info_route(detailed_info_id: int, db: Session = Depends(get_db)):
-    success = delete_detailed_info(db=db, detailed_info_id=detailed_info_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Detailed info not found")
-    return {"message": "Detailed info deleted successfully"}
+    try:
+        db_detailed_info = get_detailed_info_by_id(db=db, detailed_info_id=detailed_info_id)
+        if not db_detailed_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Detailed info with ID {detailed_info_id} does not exist.",
+            )
+        success = delete_detailed_info(db=db, detailed_info_id=detailed_info_id)
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Failed to delete detailed info with ID {detailed_info_id}.",
+            )
+        return {"message": "Detailed info deleted successfully"}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred while deleting detailed info: {str(e)}",
+        )
