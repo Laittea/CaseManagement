@@ -5,7 +5,6 @@ import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
-
 def prepare_models():
     # Load dataset and define the features and labels
     backendCode = pd.read_csv('data_commontool.csv')

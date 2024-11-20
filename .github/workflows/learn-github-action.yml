@@ -1,0 +1,23 @@
+name: cs5500PIPLINE
+
+defaults:
+  run:
+    shell: bash
+
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+jobs:
+  run-tests:
+    runs-on: macos-latest
+    steps:
+    - run: echo "🎉 Hello World!"
+    - run: echo "🐧"
+    - run: echo "🔎"
+
