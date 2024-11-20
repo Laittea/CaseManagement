@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'app/clients/**'  # Ignore all changes in the 'clients' directory
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'app/clients/**'  # Ignore all changes in the 'clients' directory
 
 jobs:
   lint:
@@ -40,4 +44,3 @@ jobs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           cat pylint-report.txt >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-
