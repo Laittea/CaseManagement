@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pylint pytest
+
+      # Run linter (Pylint)
+      - name: Run Pylint
+        run: |
+          echo "Running Pylint..."
+          pylint **/*.py
+
+      # Run tests
+      # - name: Run Tests
+      #   run: |
+      #     echo "Running Tests..."
+      #     pytest tests/
+
+      # Logs for debugging
+      - name: Debugging Logs
+        run: |
+          echo "Installed Python Version:"
+          python --version
+          echo "Installed Packages:"
+          pip list
