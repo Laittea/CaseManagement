@@ -64,6 +64,3 @@ def test_interpret_and_calculate():
     assert isinstance(results, dict)
     assert "baseline" in results
     assert "interventions" in results 
-
-if __name__ == "__main__":
-    pytest.main()
