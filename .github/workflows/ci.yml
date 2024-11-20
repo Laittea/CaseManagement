@@ -31,7 +31,8 @@ jobs:
       
       # Run tests
       - name: Run tests
-        run: pytest
+        run: |
+          pytest tests/ --maxfail=1 --disable-warnings -q
 
       # Build Docker image
       - name: Log in to Docker Hub
