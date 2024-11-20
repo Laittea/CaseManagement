@@ -31,7 +31,7 @@ class PredictionInput(BaseModel):
 
 class Client(BaseModel):
     # ID will be auto-generated in a MangoDB database setup
-    id: int  
+    id: str
     first_name: str
     last_name: str
     email: str
