@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Pylint and Save Report
         run: |
-          pylint your_python_file_or_directory > pylint-report.txt
+          pylint app/ --ignore=clients > pylint-report.txt
 
       - name: Upload Pylint Report
         uses: actions/upload-artifact@v3
