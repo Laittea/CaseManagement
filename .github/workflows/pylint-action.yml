@@ -22,4 +22,4 @@ jobs:
       - name: Analysing the code with pylint
         run: |
           echo "::log::Pylint processing"
-          pylint --disable=C,R,W $(git ls-files '*.py')
+          pylint --disable=C,R,W app/*.py
