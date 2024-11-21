@@ -27,18 +27,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
           pip install -r requirements.txt
 
       - name: Install Pylint
         run: |
-          source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
           pip install pylint
 
       - name: Run Pylint and Save Report
         run: |
-          source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
           pylint app/ --ignore=clients || true  # Continue even if pylint fails
           pylint app/ --ignore=clients > pylint-report.txt
 
