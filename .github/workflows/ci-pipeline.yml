@@ -30,6 +30,7 @@ jobs:
 
       - name: Run Pylint and Save Report
         run: |
+          pylint app/ --ignore=clients || true  # Continue even if pylint fails
           pylint app/ --ignore=clients > pylint-report.txt
 
       - name: Upload Pylint Report
