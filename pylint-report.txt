@@ -1,25 +1,3 @@
-************* Module app.database.database
-app\database\database.py:11:0: C0301: Line too long (134/100) (line-too-long)
-app\database\database.py:37:0: C0301: Line too long (102/100) (line-too-long)
-app\database\database.py:40:0: C0301: Line too long (101/100) (line-too-long)
-************* Module app.models.model
-app\models\model.py:20:0: C0301: Line too long (109/100) (line-too-long)
-app\models\model.py:21:0: C0301: Line too long (109/100) (line-too-long)
-app\models\model.py:22:0: C0301: Line too long (101/100) (line-too-long)
-app\models\model.py:32:0: C0301: Line too long (128/100) (line-too-long)
-app\models\model.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-app\models\model.py:7:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:13:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:13:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-app\models\model.py:25:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:25:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-app\models\model.py:35:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:35:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-app\models\model.py:42:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:42:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-app\models\model.py:49:0: C0115: Missing class docstring (missing-class-docstring)
-app\models\model.py:49:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-app\models\model.py:3:0: C0411: standard import "from enum import Enum as PyEnum" should be placed before "from sqlalchemy import Column, Integer, String, DateTime, Enum, ForeignKey" (wrong-import-order)
 ************* Module app.schema.schema
 app\schema\schema.py:103:0: C0304: Final newline missing (missing-final-newline)
 app\schema\schema.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -53,5 +31,5 @@ app\schema\schema.py:3:0: C0411: standard import "from datetime import datetime"
 app\schema\schema.py:1:0: W0611: Unused Field imported from pydantic (unused-import)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.67/10 (previous run: 8.67/10, +0.00)
+Your code has been rated at 9.20/10 (previous run: 9.07/10, +0.13)
 

@@ -8,7 +8,8 @@ This module provides the following:
 - `SessionLocal`: SQLAlchemy session maker for creating database sessions.
 - `get_db`: A dependency that yields a database session for use in route handlers.
 
-The module is responsible for setting up the connection to the database, creating models, and managing the database session lifecycle.
+The module is responsible for setting up the connection to the database,
+creating models, and managing the database session lifecycle.
 """
 
 # app/database.py
@@ -34,10 +35,12 @@ def get_db():
     """
         Dependency to get a database session.
 
-        This function is used as a dependency in FastAPI route handlers to provide a database session.
+        This function is used as a dependency in FastAPI route
+        handlers to provide a database session.
 
         Yields:
-            Session: A database session instance, which should be used to interact with the database.
+            Session: A database session instance,
+                     which should be used to interact with the database.
 
         The session is automatically closed after the request is completed.
     """
