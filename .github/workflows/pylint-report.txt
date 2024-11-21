@@ -1,0 +1,2 @@
+************* Module app/
+app/:1:0: F0001: No module named app/ (fatal)
