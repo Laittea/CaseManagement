@@ -2,16 +2,10 @@
 This module prepares and trains a machine learning model using the dataset,
 and saves the trained model for future use.
 """
-
-import pandas as pd
-
-
 def prepare_models():
     """
     Prepares and trains a RandomForestRegressor model using the dataset.
     """
-    # Load dataset and define the features and labels
-    backend_code = pd.read_csv('data_commontool.csv')  # Variable renamed to snake_case
     # Define categorical columns and interventions
     categorical_cols = [
         'age',
