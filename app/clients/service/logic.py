@@ -7,7 +7,10 @@ import os
 import pickle
 from itertools import product
 
-import numpy as np  # Ensure numpy is installed via `pip install numpy`
+try:
+    import numpy as np  # Ensure numpy is installed via `pip install numpy`
+except ImportError as e:
+    raise ImportError("numpy is required but not installed. Install it using `pip install numpy`.") from e
 
 # Columns representing possible interventions
 column_intervention = [
@@ -61,7 +64,6 @@ def convert_text(data):
     Returns:
         int: Converted numerical value.
     """
-    # TODO: Ensure that categorical columns match valid answers in FormNew.jsx (L131)
     categorical_cols_integers = [
         {"": 0, "true": 1, "false": 0, "no": 0, "yes": 1},
         {
