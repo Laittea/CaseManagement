@@ -52,17 +52,13 @@ async def create_client(client_data: Client):
     Returns:
         Client: The created client object.
     """
-    client_dict = client_data.dict(exclude={"id"})
-    
-    # Convert any `datetime.date` fields to `datetime.datetime`
+    client_dict = client_data.dict(exclude={"id"})    
     for key, value in client_dict.items():
         if isinstance(value, date):
             client_dict[key] = datetime.combine(value, datetime.min.time())
-    
-    result = await clients_collection.insert_one(client_dict)
+        result = await clients_collection.insert_one(client_dict)
     client_dict["_id"] = result.inserted_id
     return Client(id=str(client_dict["_id"]), **client_dict)
-
 
 @router.get("/clients/{client_id}", response_model=Client, summary="Retrieve client by ID")
 async def get_client_by_id(client_id: str):
@@ -78,7 +74,6 @@ async def get_client_by_id(client_id: str):
     client = await clients_collection.find_one({"_id": ObjectId(client_id)})
     if client is None:
         raise HTTPException(status_code=404, detail="Client not found")
-    
     # Convert ObjectId to string and return a formatted client object
     client["id"] = str(client["_id"])
     del client["_id"]
@@ -125,8 +120,6 @@ async def delete_client_by_id(client_id: str):
         raise HTTPException(status_code=404, detail="Client not found")
     
     return {"message": f"Client with ID {client_id} deleted successfully."}
-
-
 @router.delete("/clients", response_model=None, summary="Delete all clients")
 async def delete_all_clients():
     """
