@@ -1,0 +1,26 @@
+{
+    "sourceFile": "app/database.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1732418691383,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1732418731388,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,6 @@\n-\"\"\"\n-Database configuration and connection setup using Motor.\n-\"\"\"\n+# Database configuration and connection setup using Motor.\n+\n from motor.motor_asyncio import AsyncIOMotorClient\n from app.config import settings\n \n client = AsyncIOMotorClient(settings.MONGODB_URI)\n"
+                },
+                {
+                    "date": 1732419170834,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n-# Database configuration and connection setup using Motor.\n-\n+\"\"\"\n+Database configuration and connection setup using Motor.\n+\"\"\"\n from motor.motor_asyncio import AsyncIOMotorClient\n from app.config import settings\n \n client = AsyncIOMotorClient(settings.MONGODB_URI)\n"
+                }
+            ],
+            "date": 1732418691383,
+            "name": "Commit-0",
+            "content": "\"\"\"\nDatabase configuration and connection setup using Motor.\n\"\"\"\nfrom motor.motor_asyncio import AsyncIOMotorClient\nfrom app.config import settings\n\nclient = AsyncIOMotorClient(settings.MONGODB_URI)\ndatabase = client[settings.MONGODB_NAME]\nclients_collection = database.get_collection(\"clients\")\n"
+        }
+    ]
+}

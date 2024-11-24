@@ -1,0 +1,26 @@
+{
+    "sourceFile": "app/clients/database.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1732076953941,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1732077982474,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,5 +7,5 @@\n \n # Initialize MongoDB Client\n client = AsyncIOMotorClient(MONGO_DETAILS)\n database: Database = client[\"client_database\"]  # MongoDB Database Name\n-clients_collection: Collection = database[\"clients\"]  # MongoDB Collection\n\\ No newline at end of file\n+clients_collection: Collection = database[\"use\"]  # MongoDB Collection\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1732078102172,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,6 +6,6 @@\n MONGO_DETAILS = \"mongodb+srv://labUser:12345@cluster0.7rtlm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0\"  # Change this to your MongoDB URL\n \n # Initialize MongoDB Client\n client = AsyncIOMotorClient(MONGO_DETAILS)\n-database: Database = client[\"client_database\"]  # MongoDB Database Name\n+database: Database = client[\"Lab_Database\"]  # MongoDB Database Name\n clients_collection: Collection = database[\"use\"]  # MongoDB Collection\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1732076953941,
+            "name": "Commit-0",
+            "content": "from motor.motor_asyncio import AsyncIOMotorClient\nfrom pymongo.collection import Collection\nfrom pymongo.database import Database\n\n# MongoDB Connection Configuration\nMONGO_DETAILS = \"mongodb+srv://labUser:12345@cluster0.7rtlm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0\"  # Change this to your MongoDB URL\n\n# Initialize MongoDB Client\nclient = AsyncIOMotorClient(MONGO_DETAILS)\ndatabase: Database = client[\"client_database\"]  # MongoDB Database Name\nclients_collection: Collection = database[\"clients\"]  # MongoDB Collection"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": ".gitignore",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1732416761683,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1732416761683,
+            "name": "Commit-0",
+            "content": ".venv\nvenv/\n.idea\n__pycache__\n.DS_Store\n.env"
+        }
+    ]
+}

@@ -2,17 +2,12 @@
 Schemas for client and prediction data models.
 Defines Pydantic models for validation and data manipulation.
 """
-
+from pydantic import BaseModel
 from datetime import date
 from typing import Optional
-from pydantic import BaseModel
 
 
 class PredictionInput(BaseModel):
-    """
-    Schema for prediction input parameters.
-    Used for validating data submitted for predictions.
-    """
     age: int
     gender: str
     work_experience: int
@@ -40,10 +35,7 @@ class PredictionInput(BaseModel):
 
 
 class Client(BaseModel):
-    """
-    Schema for client data.
-    Represents information stored about a client in the database.
-    """
+    # ID will be auto-generated in a MangoDB database setup
     id: str
     first_name: str
     last_name: str
@@ -54,10 +46,6 @@ class Client(BaseModel):
 
 
 class ClientUpdate(BaseModel):
-    """
-    Schema for client update data.
-    Used for partial updates to client information.
-    """
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     email: Optional[str] = None
