@@ -53,5 +53,4 @@ def prepare_models():
 
     # Prepare training data
     x_categorical_baseline = backend_code[categorical_cols]  # Variable renamed to snake_case
-    y_baseline = backend_code['success_rate']
     x_categorical_baseline
