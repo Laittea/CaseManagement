@@ -50,7 +50,3 @@ def prepare_models():
         'enhanced_referrals',
     ]
     categorical_cols.extend(interventions)
-
-    # Prepare training data
-    x_categorical_baseline = backend_code[categorical_cols]  # Variable renamed to snake_case
-    x_categorical_baseline
