@@ -1,0 +1,18 @@
+{
+    "sourceFile": "runServer.sh",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1732420923025,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1732420923025,
+            "name": "Commit-0",
+            "content": "python3 -m venv venv\nsource venv/bin/activate\nexport PYTHONPATH=\"$(pwd):$PYTHONPATH\"\npip install uvicorn\npip install -r requirements.txt\ncd app\nuvicorn main:app --reload"
+        }
+    ]
+}
