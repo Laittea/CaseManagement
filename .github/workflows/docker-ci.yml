@@ -1,0 +1,25 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker image
+      run: docker compose build
+    
+    - name: Run Docker container
+      run: docker compose up -d
+    
+    - name: Run tests
+      run: |
+        sleep 10  # Wait
+        docker compose exec -T web python -m pytest
