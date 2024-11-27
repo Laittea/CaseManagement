@@ -17,7 +17,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Log in to DockerHub
+    # Step 2: Log in to DockerHub (Optional, if pushing the image)
     - name: Log in to DockerHub
       uses: docker/login-action@v2
       with:
@@ -33,18 +33,16 @@ jobs:
       run: |
         docker build -t fastapi-app .
 
-    # Step 5: Push Docker Image (Optional)
-    - name: Push Docker Image
-      run: |
-        docker tag fastapi-app ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
-
-    # Step 6: Run the container
+    # Step 5: Run Docker Container with GitHub Secrets
     - name: Run Docker Container
       run: |
-        docker run -d --name fastapi-container -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi-app:latest
+        docker run -d \
+          -p 8000:8000 \
+          -e MONGODB_URI=${{ secrets.MONGODB_URI }} \
+          -e MONGODB_NAME=${{ secrets.MONGODB_NAME }} \
+          fastapi-app
 
-    # Step 7: Test API Endpoints
+    # Step 6: Test API Endpoints
     - name: Test API Endpoints
       run: |
         sleep 5 # Allow time for the container to start
