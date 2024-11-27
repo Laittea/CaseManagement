@@ -23,13 +23,13 @@ jobs:
 
     # Run the Docker Container
     - name: Run Docker Container
-      run: docker run -d --name my-container -p 8000:80 my-api
+      run: docker run -d --name my-container -p 8080:80 my-api
 
     # Test the Running Container
     - name: Test API Endpoints
       run: |
-        sleep 5 # Allow some time for the container to start
-        curl --fail http://0.0.0.0:8000/docs || exit 1
+        sleep 10 # Allow some time for the container to start
+        curl --fail http://0.0.0.0:8080/docs || exit 1
         echo "API is accessible and working!"
 
     # Stop and Remove the Container
