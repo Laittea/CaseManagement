@@ -29,7 +29,7 @@ jobs:
     - name: Test API Endpoints
       run: |
         sleep 5 # Allow some time for the container to start
-        curl --fail http://localhost:8080 || exit 1
+        curl --fail http://0.0.0.0:8080/docs || exit 1
         echo "API is accessible and working!"
 
     # Stop and Remove the Container
