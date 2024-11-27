@@ -144,7 +144,6 @@ traitlets==5.11.2
 trio==0.27.0
 trio-websocket==0.11.1
 typing_extensions==4.12.2
-typing_extensions==4.8.0
 tzdata==2023.3
 uri-template==1.2.0
 urllib3==2.0.7
