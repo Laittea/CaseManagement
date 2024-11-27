@@ -41,7 +41,8 @@ jobs:
       # Step 5: Run tests inside the container
       - name: Run tests
         run: |
-          docker exec thoughtful-app-container python /test/test.py
+          docker exec thoughtful-app-container python /app/tests/test.py
+
       # Step 6: Clean up
       - name: Stop and remove container
         run: |

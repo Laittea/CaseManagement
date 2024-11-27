@@ -11,4 +11,5 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run tests by default
-CMD ["python", "/app/clients/service/model.py"]
+# CMD ["python", "/app/clients/service/model.py"]
+CMD ["sleep","1h"]
