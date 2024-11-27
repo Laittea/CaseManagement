@@ -1,0 +1,19 @@
+name: Backend CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Backend Docker image
+      run: docker build -t cat-backend:test .
+    - name: Run tests
+      run: |
+        docker run -d -p 5000:5000 --name backend-container cat-backend:test
+        sleep 10
+        docker exec backend-container python -m pytest tests/
