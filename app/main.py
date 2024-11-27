@@ -41,3 +41,7 @@ def read_root():
         This is typically used to check if the server is running.
     """
     return {"message": "Welcome to the FastAPI application!"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=5000)
