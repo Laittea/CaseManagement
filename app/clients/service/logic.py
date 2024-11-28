@@ -4,6 +4,10 @@ from itertools import product
 from app.clients.schema import PredictionInput
 from app.clients.util import util_get_cols
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 column_intervention = [
     'Life Stabilization',
@@ -16,9 +20,17 @@ column_intervention = [
 ]
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-filename = os.path.join(current_dir, 'model.pkl')
-model = pickle.load(open(filename, "rb"))
+# Dynamically load the model
+try:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(current_dir, MODEL_OUTPUT_NAME)
+    with open(model_path, "rb") as model_file:
+        model = pickle.load(model_file)
+    print(f"Model of type {MODEL_TYPE} loaded successfully from {model_path}")
+except FileNotFoundError:
+    print(f"Error: Model file not found at {model_path}. Please check the MODEL_OUTPUT_NAME in .env.")
+except Exception as e:
+    print(f"An error occurred while loading the model: {e}")
 
 
 def convert_none_bool(value):
