@@ -53,30 +53,11 @@ def prepare_models():
     print(f"Training {MODEL_TYPE} model...")
     model.fit(X_train_baseline, y_train_baseline)
 
-    # Example: Predicting on the test set (optional, for evaluation)
-    baseline_predictions = model.predict(X_test_baseline)
-    print(f"Sample predictions: {baseline_predictions[:5]}")
+    # Example: Predicting on the test set
+    baseline_predictions = rf_model_baseline.predict(X_test_baseline)
 
-    return model
-
-
-# def test_column_order():
-#     """
-#     Test if the column order matches the expected original order.
-#     """
-#     print("\n#################### test_column_order() ####################")
-#     test_original_cols = [
-#         'age', 'gender', 'work_experience', 'canada_workex', 'dep_num', 'canada_born', 'citizen_status',
-#         'level_of_schooling', 'fluent_english', 'reading_english_scale', 'speaking_english_scale',
-#         'writing_english_scale', 'numeracy_scale', 'computer_scale', 'transportation_bool',
-#         'caregiver_bool', 'housing', 'income_source', 'felony_bool', 'attending_school',
-#         'currently_employed', 'substance_use', 'time_unemployed', 'need_mental_health_support_bool'
-#     ]
-#     cols = util_get_cols()
-#     if cols == test_original_cols:
-#         print("PASS")
-#     else:
-#         print("FAIL")
+    
+    return rf_model_baseline
 
 
 def main():

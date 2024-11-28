@@ -91,3 +91,14 @@ fastapi dev main.py
 - `field_serializer` from Pydantic package was used to convert string type into numerical types
 - We are investigating FastAPI docs and finding that we can use environment variables to configure some parameters in code
 - Primary study showed that we need to retrieve some intermediate variables to suit our code with test
+
+
+
+## Sprint 3
+
+- Different machine learning models, including LinearRegression, GradientBoostingRegressor and SVR were trained and tested to expand the choice in prediction.
+- The task of data type convertion was refactored to be conducted by the `PredictionInput` class.
+- Order of features (columns from the frontend form) was configured in `.env` file.
+- Unit tests were added to make sure the code works during the refactoring work.
+- Intergrated test was perfromed on the `clients/predictions` API to make sure the API is working.
+
