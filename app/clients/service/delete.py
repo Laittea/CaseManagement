@@ -1,43 +1,32 @@
-import sqlite3
 from fastapi import HTTPException
-
-DATABASE = '../mydatabase.db'
+from app.clients.mapper import get_client, delete_client_from_db
 
 def check_valid_input(client_id):
+    """Check if the input is valid"""
     if not client_id.isdigit():
         raise HTTPException(status_code=400, detail="Invalid client_id format.")
 
-# Deletion service logic
 async def delete_client(client_id: str):
+    """Deletion service logic"""
     # Validate input
     check_valid_input(client_id)
-    try:
-        # Connect to the database
-        conn = sqlite3.connect(DATABASE)
-        cursor = conn.cursor()
 
-        # Check if the client exists
-        cursor.execute("SELECT * FROM CommonAssessmentTool_Table WHERE client_id = ?", (client_id,))
-        row = cursor.fetchone()
-        if not row:
+    # Retrieve the client
+    try:
+        client = get_client(client_id)
+        if not client:
             raise HTTPException(
                 status_code=404,
                 detail=f"Client with ID {client_id} not found"
             )
 
         # Delete the client
-        cursor.execute("DELETE FROM CommonAssessmentTool_Table WHERE client_id = ?", (client_id,))
-        conn.commit()
+        delete_client_from_db(client_id)
 
         return {
             "success": True,
             "message": f"Client {client_id} successfully deleted",
             "client_id": client_id
         }
-    except sqlite3.Error as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Database error occurred: {str(e)}"
-        ) from e
-    finally:
-        conn.close()
+    except Exception as e:
+        raise e
