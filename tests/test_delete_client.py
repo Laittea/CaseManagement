@@ -1,3 +1,4 @@
+"""Test functions for the delete api"""
 import pytest
 from fastapi import HTTPException
 from app.clients.service.delete import delete_client
