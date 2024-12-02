@@ -56,7 +56,7 @@ async def create_client(client_data: Client):
     for key, value in client_dict.items():
         if isinstance(value, date):
             client_dict[key] = datetime.combine(value, datetime.min.time())
-        result = await clients_collection.insert_one(client_dict)
+    result = await clients_collection.insert_one(client_dict)
     client_dict["_id"] = result.inserted_id
     return Client(id=str(client_dict["_id"]), **client_dict)
 
