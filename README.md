@@ -66,27 +66,33 @@ An unexpected error occurred on the server.
 This endpoint requires the `client_id` to be a valid **integer string**.
 
 
-GET /clients/{client_id}
-Description
-Retrieves information for a client with the specified client_id from the database.
+### **GET /clients/{client_id}**
 
-Path Parameters
-Parameter	Type	Description
-client_id	string	The unique ID of the client to retrieve.
-Request Example
-URL:
+#### **Description**
+Retrieves information for a client with the specified `client_id` from the database.
 
-http
-Copy code
+---
+
+### **Path Parameters**
+
+| Parameter  | Type   | Description                           |
+|------------|--------|---------------------------------------|
+| `client_id` | string | The unique ID of the client to retrieve. |
+
+---
+
+### **Request Example**
+
+**URL**:
+
+```http
 GET /clients/123
+
 Responses
 200 OK
 The client information was successfully retrieved.
 
 Response Example:
-
-json
-Copy code
 {
     "success": true,
     "data": {
@@ -94,40 +100,36 @@ Copy code
         "email": "john@example.com"
     }
 }
+
 404 Not Found
 No client with the specified client_id exists.
 
 Response Example:
-
-json
-Copy code
 {
     "detail": "Client with ID 123 not found."
 }
+
 400 Bad Request
 The client_id is invalid or improperly formatted.
 
 Response Example:
-
-json
-Copy code
 {
     "detail": "Invalid client_id format."
 }
+
+
 500 Internal Server Error
 An unexpected error occurred on the server.
 
 Response Example:
-
-json
-Copy code
 {
     "detail": "An error message describing the issue."
 }
+
 Notes
 The client_id must be a valid string that matches the expected format in the database.
 Ensure the client_id exists before making the request to avoid a 404 error.
-
+Copy code
 
 
 
