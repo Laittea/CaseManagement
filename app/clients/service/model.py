@@ -11,7 +11,8 @@ load_dotenv()
 
 # Get configuration from .env
 MODEL_TYPE = os.getenv("MODEL_TYPE", "RandomForestRegressor")  # Default: RandomForestRegressor
-MODEL_OUTPUT_NAME = os.getenv("MODEL_OUTPUT_NAME", "different.pkl")  # Default: different.pkl
+MODEL_OUTPUT_NAME = os.getenv("MODEL_OUTPUT_NAME", "random_forest_model.pkl")  # Default: different.pkl
+
 
 def prepare_models():
     """
@@ -54,10 +55,9 @@ def prepare_models():
     model.fit(X_train_baseline, y_train_baseline)
 
     # Example: Predicting on the test set
-    baseline_predictions = rf_model_baseline.predict(X_test_baseline)
+    # baseline_predictions = model.predict(X_test_baseline)
 
-    
-    return rf_model_baseline
+    return model
 
 
 def main():
@@ -74,6 +74,7 @@ def main():
     # Optional: Reload the model to verify save/load functionality
     model = pickle.load(open(MODEL_OUTPUT_NAME, "rb"))
     print(f"Model reloaded successfully from {MODEL_OUTPUT_NAME}")
+
 
 if __name__ == "__main__":
     main()

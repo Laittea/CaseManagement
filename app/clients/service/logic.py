@@ -9,16 +9,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-column_intervention = [
-    'Life Stabilization',
-    'General Employment Assistance Services',
-    'Retention Services',
-    'Specialized Services',
-    'Employment-Related Financial Supports for Job Seekers and Employers',
-    'Employer Financial Supports',
-    'Enhanced Referrals for Skills Development'
-]
-
+# Get configuration from .env
+MODEL_TYPE = os.getenv("MODEL_TYPE", "RandomForestRegressor")  # Default: RandomForestRegressor
+MODEL_OUTPUT_NAME = os.getenv("MODEL_OUTPUT_NAME", "random_forest_model.pkl")  # Default: different.pkl
 
 # Dynamically load the model
 try:
@@ -31,6 +24,17 @@ except FileNotFoundError:
     print(f"Error: Model file not found at {model_path}. Please check the MODEL_OUTPUT_NAME in .env.")
 except Exception as e:
     print(f"An error occurred while loading the model: {e}")
+
+
+column_intervention = [
+    'Life Stabilization',
+    'General Employment Assistance Services',
+    'Retention Services',
+    'Specialized Services',
+    'Employment-Related Financial Supports for Job Seekers and Employers',
+    'Employer Financial Supports',
+    'Enhanced Referrals for Skills Development'
+]
 
 
 def convert_none_bool(value):
@@ -112,6 +116,7 @@ def interpret_and_calculate(data):
     baseline_row = baseline_row.reshape(1, -1)
     print("BASELINE ROW IS", baseline_row)
     intervention_rows = create_matrix(raw_data)
+    print("ML MODEL IS", MODEL_TYPE)
     baseline_prediction = model.predict(baseline_row)
     intervention_predictions = model.predict(intervention_rows)
     intervention_predictions = intervention_predictions.reshape(-1, 1)  # want shape to be a vertical column, not a row
@@ -129,6 +134,3 @@ def interpret_and_calculate(data):
     # build output dict
     print(f"RESULTS: {results}")
     return results
-
-
-#################### Test Data and Methods ####################
