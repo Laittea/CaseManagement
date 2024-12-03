@@ -13,6 +13,7 @@ from app.database import clients_collection
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
+
 @router.post("/create", response_model=Client, summary="Create a new client")
 async def create_client(client_data: Client):
     """
@@ -31,6 +32,7 @@ async def create_client(client_data: Client):
     result = await clients_collection.insert_one(client_dict)
     client_dict["_id"] = result.inserted_id
     return Client(id=str(client_dict["_id"]), **client_dict)
+
 
 @router.get("/clients/{client_id}", response_model=Client, summary="Retrieve client by ID")
 async def get_client_by_id(client_id: str):
@@ -51,6 +53,7 @@ async def get_client_by_id(client_id: str):
     del client["_id"]
     return client
 
+
 @router.get("/clients", response_model=List[Client], summary="Retrieve all clients")
 async def get_all_clients():
     """
@@ -66,6 +69,7 @@ async def get_all_clients():
         del client["_id"]
 
     return clients_cursor
+
 
 @router.delete("/clients/{client_id}", response_model=None, summary="Delete client by ID")
 async def delete_client_by_id(client_id: str):
@@ -91,6 +95,7 @@ async def delete_client_by_id(client_id: str):
 
     return {"message": f"Client with ID {client_id} deleted successfully."}
 
+
 @router.delete("/clients", response_model=None, summary="Delete all clients")
 async def delete_all_clients():
     """
@@ -101,6 +106,7 @@ async def delete_all_clients():
     """
     await clients_collection.delete_many({})
     return {"message": "All clients deleted successfully."}
+
 
 @router.put("/clients/{client_id}", response_model=Client, summary="Update client by ID")
 async def update_client(client_id: str, client_data: ClientUpdate):
@@ -122,7 +128,8 @@ async def update_client(client_id: str, client_data: ClientUpdate):
     updated_fields = client_data.dict(exclude_unset=True)
     for field, value in updated_fields.items():
         if isinstance(value, date):
-            updated_fields[field] = datetime.combine(value, datetime.min.time())
+            updated_fields[field] = datetime.combine(
+                value, datetime.min.time())
 
     await clients_collection.update_one({"_id": ObjectId(client_id)}, {"$set": updated_fields})
 
