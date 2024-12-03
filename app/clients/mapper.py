@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from typing import Optional
+from app.clients.service.update_model import ClientUpdateModel
 
 DATABASE = os.path.join(os.path.dirname(__file__), '../../mydatabase.db')
 
@@ -35,11 +36,13 @@ def delete_client_from_db(client_id: str):
 def update_client_in_db(client_id: str, update_data: dict):
     """Update a client record in the database by client_id."""
     try:
+        validated_data = ClientUpdateModel(**update_data)
+        update_dict = validated_data.model_dump(exclude_unset=True)
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         # Assuming update_data is a dict with column names as keys
-        updates = ", ".join([f"{key} = ?" for key in update_data.keys()])
-        values = list(update_data.values())
+        updates = ", ".join([f"{key} = ?" for key in update_dict.keys()])
+        values = list(update_dict.values())
         values.append(client_id)
         cursor.execute(f"UPDATE CommonAssessmentTool_Table SET {updates} WHERE client_id = ?", values)
         conn.commit()

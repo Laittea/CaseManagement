@@ -6,7 +6,7 @@ from app.clients.service.update import update_client
 @pytest.mark.asyncio
 async def test_update_client_success():
     """Test successful update of a client."""
-    client_id = "61"
+    client_id = "45"
     update_data = {
         "age": 32,
         "work_experience": 7,
@@ -35,7 +35,7 @@ async def test_update_client_not_found():
 
     # Assertions
     assert excinfo.value.status_code == 404
-    assert excinfo.value.detail == "Client with ID {client_id} not found"
+    assert excinfo.value.detail == f"Client with ID {client_id} not found"
 
 @pytest.mark.asyncio
 async def test_update_client_invalid_id():

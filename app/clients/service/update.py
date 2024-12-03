@@ -28,4 +28,4 @@ async def update_client(client_id: str, update_data: dict):
             "client_id": client_id
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise e

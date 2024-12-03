@@ -22,9 +22,7 @@ async def delete_client_endpoint(client_id: str):
     print(f"Delete client: {client_id}")
     return await delete_client(client_id)
 
-
-@router.put("/{client_id}", response_model=ClientUpdateModel)
+@router.put("/{client_id}")
 async def update_client_endpoint(client_id: str, update_data: ClientUpdateModel = Body(...)):
     print(f"Update client: {client_id}")
     return await update_client(client_id, update_data)
-
