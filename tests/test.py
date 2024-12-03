@@ -12,6 +12,39 @@ from app.clients.router import get_client_by_id, get_all_clients, update_client
 from app.database import clients_collection
 
 @pytest.mark.asyncio
+async def test_create_client():
+    """
+    Test the create_client function to ensure it creates a new client in the database correctly.
+    """
+    # Prepare test data
+    test_client_data = {
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "email": "alice.smith@example.com",
+        "date_of_birth": date(1992, 5, 10),
+        "address": "789 Birch St, Springfield, IL",
+        "phone": "555-6789"
+    }
+
+    # Mock the insert_one method to return a mock inserted_id
+    mock_inserted_id = ObjectId()
+    clients_collection.insert_one = AsyncMock(return_value=AsyncMock(inserted_id=mock_inserted_id))
+
+    # Call the function with test data
+    from app.clients.schema import Client
+    test_client = Client(**test_client_data)
+    created_client = await create_client(test_client)
+
+    # Assertions
+    assert created_client.id == str(mock_inserted_id)
+    for key, value in test_client_data.items():
+        if isinstance(value, date):
+            assert created_client.dict()[key] == datetime.combine(value, datetime.min.time()).date()
+        else:
+            assert created_client.dict()[key] == value
+
+
+@pytest.mark.asyncio
 async def test_get_client_by_id():
     """
     Test the get_client_by_id function to ensure it retrieves a client correctly.
