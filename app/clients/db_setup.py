@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 DB_FILE = "case_management.db"
 
