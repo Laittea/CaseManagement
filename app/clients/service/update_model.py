@@ -26,6 +26,14 @@ class ClientUpdateModel(BaseModel):
     substance_use: str = Field(None, example="No")
     time_unemployed: int = Field(None, example=0)
     need_mental_health_support_bool: str = Field(None, example="No")
+    employment_assistance: int = Field(None, example=1)
+    life_stabilization: int = Field(None, example=1)
+    retention_services: int = Field(None, example=1)
+    specialized_services: int = Field(None, example=1)
+    employment_related_financial_supports: int = Field(None, example=1)
+    employer_financial_supports: int = Field(None, example=1)
+    enhanced_referrals: int = Field(None, example=1)
+    success_rate: int = Field(None, example=100)
 
     class Config:
         orm_mode = True
