@@ -66,72 +66,6 @@ An unexpected error occurred on the server.
 This endpoint requires the `client_id` to be a valid **integer string**.
 
 
-### **GET /clients/{client_id}**
-
-#### **Description**
-Retrieves information for a client with the specified `client_id` from the database.
-
----
-
-### **Path Parameters**
-
-| Parameter  | Type   | Description                           |
-|------------|--------|---------------------------------------|
-| `client_id` | string | The unique ID of the client to retrieve. |
-
----
-
-### **Request Example**
-
-**URL**:
-
-```http
-GET /clients/123
-
-Responses
-200 OK
-The client information was successfully retrieved.
-
-Response Example:
-{
-    "success": true,
-    "data": {
-        "name": "John Doe",
-        "email": "john@example.com"
-    }
-}
-
-404 Not Found
-No client with the specified client_id exists.
-
-Response Example:
-{
-    "detail": "Client with ID 123 not found."
-}
-
-400 Bad Request
-The client_id is invalid or improperly formatted.
-
-Response Example:
-{
-    "detail": "Invalid client_id format."
-}
-
-
-500 Internal Server Error
-An unexpected error occurred on the server.
-
-Response Example:
-{
-    "detail": "An error message describing the issue."
-}
-
-Notes
-The client_id must be a valid string that matches the expected format in the database.
-Ensure the client_id exists before making the request to avoid a 404 error.
-Copy code
-
-
 ### **PUT /clients/{client_id}**
 
 #### **Description**
@@ -197,48 +131,49 @@ PUT /clients/61
     "currently_employed": "Yes",
     "housing": "Homeowner"
 }
-Responses
-200 OK
+```
+
+**Responses**
+**200 OK**
 
 The client information was successfully updated.
 
-Response Example:
-
+**Response Example:**
+```json
 {
     "success": true,
     "message": "Client 61 successfully updated",
     "client_id": "61"
 }
-
-404 Not Found
+```
+**404 Not Found**
 
 No client with the specified client_id exists.
 
-Response Example:
-
+**Response Example:**
+```json
 {
     "detail": "Client with ID 61 not found."
 }
-400 Bad Request
+```
+**400 Bad Request**
 
 The client_id is invalid or improperly formatted.
 
-Response Example:
-
+**Response Example:**
+```json
 {
     "detail": "Invalid client_id format."
 }
-{
-    "detail": "Invalid client_id format."
-}
-500 Internal Server Error
+```
+**500 Internal Server Error**
 
 An unexpected error occurred on the server.
 
-Response Example:
+```json
+**Response Example:**
 {
     "detail": "An error message describing the issue."
 }
-
-
+```
 
