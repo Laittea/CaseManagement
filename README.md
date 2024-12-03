@@ -230,19 +230,54 @@ Deletes a client with the specified `client_id` from the database.
 ```
 DELETE /clients/1
 ```
-## Responses
 
-**200 OK**
+```
 
-The client was successfully deleted.
+**404 Not Found**
+
+No client with the specified `client_id` exists.
 
 **Response Example:**
 ```json
 {
-    "success": true,
-    "message": "Client 1 successfully deleted",
-    "client_id": "1"
+    "detail": "Client with ID 1 not found."
 }
+```
+
+**500 Internal Server Error**
+
+An unexpected error occurred on the server.
+
+**Response Example:**
+```json
+{
+    "detail": "An error message describing the issue."
+}
+```
+
+### Notes
+
+This endpoint requires the `client_id` to be a valid **integer string**.
+
+## GET `/clients/{client_id}`
+
+### Description
+Gets a client with the specified `client_id` from the database.
+
+### Path Parameters
+
+| Parameter   | Type     | Description                            |
+|-------------|----------|----------------------------------------|
+| `client_id` | `string` | The unique ID of the client to get. |
+
+### Request Example
+
+**URL:**
+
+```
+GET /clients/1
+```
+
 ```
 
 **404 Not Found**
@@ -272,17 +307,4 @@ An unexpected error occurred on the server.
 This endpoint requires the `client_id` to be a valid **integer string**.
 
 
-### **GET /clients/{client_id}**
 
-#### **Description**
-Retrieves information for a client with the specified `client_id` from the database.
-
----
-
-### **Path Parameters**
-
-| Parameter  | Type   | Description                           |
-|------------|--------|---------------------------------------|
-| `client_id` | string | The unique ID of the client to retrieve. |
-
----
