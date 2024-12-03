@@ -170,8 +170,8 @@ The client_id is invalid or improperly formatted.
 
 An unexpected error occurred on the server.
 
-```json
 **Response Example:**
+```json
 {
     "detail": "An error message describing the issue."
 }
