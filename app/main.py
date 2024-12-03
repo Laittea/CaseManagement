@@ -15,7 +15,10 @@ def read_root():
         "version": "1.0.0",
         "docs_url": "/docs"
     }
-
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+    
 # Set API endpoints on router
 app.include_router(clients_router)
 
