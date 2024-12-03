@@ -1,3 +1,4 @@
+# specifies the deployment lifecycle events
 version: 0.0
 os: linux
 files:
