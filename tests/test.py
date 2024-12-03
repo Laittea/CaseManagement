@@ -1,4 +1,5 @@
-from logic import interpret_and_calculate
+"""Test functions"""
+# from logic import interpret_and_calculate
 from itertools import combinations_with_replacement
 
 # def test_interpret_and_calculate():

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 from app.clients.service.logic import interpret_and_calculate
+from app.clients.service.delete import delete_client
 from app.clients.schema import PredictionInput
 
 from fastapi import HTTPException
