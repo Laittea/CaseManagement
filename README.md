@@ -132,6 +132,113 @@ Ensure the client_id exists before making the request to avoid a 404 error.
 Copy code
 
 
+### **PUT /clients/{client_id}**
+
+#### **Description**
+Updates specific fields of an existing client record.
+
+---
+
+### **Path Parameters**
+
+| Parameter   | Type     | Description                            |
+|-------------|----------|----------------------------------------|
+| `client_id` | `string` | The unique ID of the client to update. |
+
+---
+
+### **Request Body**
+
+The fields to be updated must be passed as a JSON object. Unspecified fields will remain unchanged.
+
+| Field                          | Type    | Example                | Description                             |
+|--------------------------------|---------|------------------------|-----------------------------------------|
+| `age`                          | integer | `32`                  | Age of the client.                     |
+| `gender`                       | string  | `"Male"`              | Gender of the client.                  |
+| `work_experience`              | integer | `7`                   | Years of total work experience.        |
+| `canada_workex`                | integer | `3`                   | Years of work experience in Canada.    |
+| `dep_num`                      | integer | `1`                   | Number of dependents.                  |
+| `canada_born`                  | string  | `"No"`                | Whether the client was born in Canada. |
+| `citizen_status`               | string  | `"Citizen"`           | Citizenship status of the client.      |
+| `level_of_schooling`           | string  | `"Master's degree"`   | Highest level of education completed.  |
+| `fluent_english`               | string  | `"Yes"`               | Whether the client is fluent in English. |
+| `reading_english_scale`        | integer | `10`                  | English reading skill level (1-10).    |
+| `speaking_english_scale`       | integer | `10`                  | English speaking skill level (1-10).   |
+| `writing_english_scale`        | integer | `10`                  | English writing skill level (1-10).    |
+| `numeracy_scale`               | integer | `10`                  | Numeracy skill level (1-10).           |
+| `computer_scale`               | integer | `10`                  | Computer skill level (1-10).           |
+| `transportation_bool`          | string  | `"No"`                | Whether transportation support is needed. |
+| `caregiver_bool`               | string  | `"No"`                | Whether the client is a primary caregiver. |
+| `housing`                      | string  | `"Homeowner"`         | Housing status of the client.          |
+| `income_source`                | string  | `"Employment"`        | Source of income.                      |
+| `felony_bool`                  | string  | `"No"`                | Whether the client has a felony record. |
+| `attending_school`             | string  | `"No"`                | Whether the client is currently a student. |
+| `currently_employed`           | string  | `"Yes"`               | Employment status of the client.       |
+| `substance_use`                | string  | `"No"`                | Whether the client has a substance use disorder. |
+| `time_unemployed`              | integer | `0`                   | Time unemployed in years.              |
+| `need_mental_health_support_bool` | string | `"No"`               | Whether the client needs mental health support. |
+
+---
+
+### **Request Example**
+
+**URL**:
+PUT /clients/61
+
+
+**Request Body**:
+```json
+{
+    "age": 32,
+    "work_experience": 7,
+    "canada_workex": 3,
+    "level_of_schooling": "Master's degree",
+    "fluent_english": "Yes",
+    "currently_employed": "Yes",
+    "housing": "Homeowner"
+}
+Responses
+200 OK
+
+The client information was successfully updated.
+
+Response Example:
+
+{
+    "success": true,
+    "message": "Client 61 successfully updated",
+    "client_id": "61"
+}
+
+404 Not Found
+
+No client with the specified client_id exists.
+
+Response Example:
+
+{
+    "detail": "Client with ID 61 not found."
+}
+400 Bad Request
+
+The client_id is invalid or improperly formatted.
+
+Response Example:
+
+{
+    "detail": "Invalid client_id format."
+}
+{
+    "detail": "Invalid client_id format."
+}
+500 Internal Server Error
+
+An unexpected error occurred on the server.
+
+Response Example:
+{
+    "detail": "An error message describing the issue."
+}
 
 
 
