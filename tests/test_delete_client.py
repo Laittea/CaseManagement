@@ -16,11 +16,7 @@ async def test_delete_client_success():
         gender="Male",
         work_experience=5,
         canada_workex=3,
-        fluent_english="Yes",
-        level_of_schooling="Bachelor's",
-        currently_employed="Yes"
     )
-
     result = await create_client(client_data)
     client_id = str(result['client_id'])
 
