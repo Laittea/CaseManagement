@@ -3,10 +3,10 @@ name: Pylint Check
 on:
   push:
     branches:
-      - NewBranchToTestCI  # Trigger workflow on push to this branch
+      - NewBranchToTestCI # Trigger workflow on push to this branch
   pull_request:
     branches:
-      - NewBranchToTestCI  # Trigger workflow on pull requests to this branch
+      - NewBranchToTestCI # Trigger workflow on pull requests to this branch
 
 jobs:
   lint:
@@ -21,7 +21,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Replace with your Python version (e.g., '3.10')
+          python-version: "3.x" # Replace with your Python version (e.g., '3.10')
+
+      # Step 2.5: Install system dependencies
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-distutils
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -32,4 +38,4 @@ jobs:
 
       # Step 4: Run pylint
       - name: Run Pylint
-        run: pylint your_module_name_here  # Replace with the name of your module, file, or directory
+        run: pylint your_module_name_here # Replace with the name of your module, file, or directory
