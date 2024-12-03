@@ -1,0 +1,77 @@
+name: Continuous Integration Pipeline
+
+# Triggering the workflow on push or pull request to the main branch
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-and-build:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: common_assess
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4.8.0
+        with:
+          python-version: 3.10.11
+
+      - name: Check versions 
+        run: |
+          python --version
+          pip --version
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pymysql
+
+      - name: Linter Check
+        run: |
+          pip install pylint
+          pylint $(git ls-files '*.py')
+
+      - name: Configure Test Enviroment
+        run: |
+          pip install pytest
+          pytest
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+            mysqladmin ping -h 127.0.0.1 --silent && break
+            echo "Waiting for MySQL..." && sleep 2
+          done
+
+      - name: Apply Database Migrations
+        run: |
+          python app/database.py
+
+      - name: Run Application
+        run: |
+          nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload &

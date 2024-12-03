@@ -1,10 +1,10 @@
-from typing import List
-import pandas as pd
-import json
-import numpy as np
+'''Module containing functions for logic'''
+
+import os
 import pickle
-from itertools import combinations_with_replacement
 from itertools import product
+import numpy as np
+
 
 column_intervention = [
     'Life Stabilization',
@@ -13,25 +13,23 @@ column_intervention = [
     'Specialized Services',
     'Employment-Related Financial Supports for Job Seekers and Employers', 
     'Employer Financial Supports',
-    'Enhanced Referrals for Skills Development'
-]
+    'Enhanced Referrals for Skills Development']
 
-#loads the model into logic
-
-import os
-
+# Loads the model into logic
 current_dir = os.path.dirname(os.path.abspath(__file__))
 filename = os.path.join(current_dir, 'model.pkl')
+# pylint: disable=consider-using-with
 model = pickle.load(open(filename, "rb"))
 
 
 def clean_input_data(data):
-    #translate input into wahtever we trained the model on, numerical data in a specific order
-    columns = ["age","gender","work_experience","canada_workex","dep_num",	"canada_born",	
-               "citizen_status",	"level_of_schooling",	"fluent_english",	"reading_english_scale",	
-               "speaking_english_scale",	"writing_english_scale",	"numeracy_scale",	"computer_scale",	
-               "transportation_bool",	"caregiver_bool",	"housing",	"income_source",	"felony_bool",	"attending_school",	
-               "currently_employed",	"substance_use",	"time_unemployed",	"need_mental_health_support_bool"]
+    '''Translate input into what we trained the model on, numerical data in a specific order'''
+    columns = ["age", "gender", "work_experience", "canada_workex", "dep_num", "canada_born",
+                "citizen_status","level_of_schooling","fluent_english","reading_english_scale",
+                "speaking_english_scale", "writing_english_scale","numeracy_scale",
+                "computer_scale", "transportation_bool", "caregiver_bool", "housing",
+                "income_source", "felony_bool", "attending_school", "currently_employed",
+                "substance_use", "time_unemployed", "need_mental_health_support_bool"]
     demographics = {
         'age': data['age'],
         'gender': data['gender'],
@@ -60,7 +58,8 @@ def clean_input_data(data):
     }
     output = []
     for column in columns:
-        data = demographics.get(column, None) #default is None, and if you want to pass a value, can return any value
+         # If you want to pass a value, can return any value.
+        data = demographics.get(column, None)
         if isinstance(data, str):
             data = convert_text(column, data)
         output.append(data)
@@ -68,8 +67,8 @@ def clean_input_data(data):
 
 
 def convert_text(column, data:str):
-    # Convert text answers from front end into digits
-    # TODO: ensure that categorical columns match the valid answers in FormNew.jsx (L131)
+    '''Convert text answers from front end into digits.
+    TODO: ensure that categorical columns match the valid answers in FormNew.jsx (L131)'''
     categorical_cols_integers = [
         {
             "": 0,
@@ -132,20 +131,25 @@ def convert_text(column, data:str):
 
     return data
 
-#creates 128 possible combinations in order to run every possibility through model
+
 def create_matrix(row):
-    data = [row.copy() for _ in range(128)] 
+    '''Create 128 possible combos to run every possibility through model'''
+    data = [row.copy() for _ in range(128)]
     perms = intervention_permutations(7)
     data = np.array(data)
     perms = np.array(perms)
-    matrix = np.concatenate((data,perms), axis = 1) 
+    matrix = np.concatenate((data,perms), axis = 1)
     return np.array(matrix)
-#create matrix of permutations of 1 and 0 of num length
+
+
 def intervention_permutations(num):
+    '''Create matrix of permutations of 1 and 0 of num length'''
     perms = list(product([0,1],repeat=num))
     return np.array(perms)
 
+
 def get_baseline_row(row):
+    '''Get baseline row'''
     print(type(row))
     base_interventions = np.array([0]*7) # no interventions
     row = np.array(row)
@@ -155,37 +159,41 @@ def get_baseline_row(row):
     return line
 
 def intervention_row_to_names(row):
+    '''Reture names with the intervention'''
     names = []
     for i, value in enumerate(row):
-        if value == 1: 
+        if value == 1:
             names.append(column_intervention[i])
     return names
 
 def process_results(baseline, results):
-    ##Example:
-    """
+    '''Example:
     {
         baseline_probability: 80 #baseline percentage point with no interventions
         results: [
-            (85, [A,B,C]) #new percentange with intervention combinations and list of intervention names
+            #new percentange with intervention combinations and list of intervention names
+            (85, [A,B,C])
             (89, [B,C])
             (91, [D,E])
         ]
     }
-    """
+    '''
     result_list= []
     for row in results:
-        percent = row[-1] 
+        percent = row[-1]
         names = intervention_row_to_names(row)
         result_list.append((percent,names))
 
     output = {
-        "baseline": baseline[-1], #if it's an array, want the value inside of the array
+        #if it's an array, want the value inside of the array
+        "baseline": baseline[-1],
         "interventions": result_list,
     }
     return output
 
+
 def interpret_and_calculate(data):
+    '''Interpret and calculate from data'''
     raw_data = clean_input_data(data)
     baseline_row = get_baseline_row(raw_data)
     baseline_row = baseline_row.reshape(1, -1)
@@ -193,25 +201,29 @@ def interpret_and_calculate(data):
     intervention_rows = create_matrix(raw_data)
     baseline_prediction = model.predict(baseline_row)
     intervention_predictions = model.predict(intervention_rows)
-    intervention_predictions = intervention_predictions.reshape(-1, 1) #want shape to be a vertical column, not a row
-    result_matrix = np.concatenate((intervention_rows,intervention_predictions), axis = 1) ##CHANGED AXIS
-    
+    intervention_predictions = intervention_predictions.reshape(-1, 1) # vertical column
+    result_matrix = np.concatenate((intervention_rows,intervention_predictions), axis = 1)
+
     # sort this matrix based on prediction
     # print("RESULT SAMPLE::", result_matrix[:5])
-    result_order = result_matrix[:,-1].argsort() #take all rows and only last column, gives back list of indexes sorted
-    result_matrix = result_matrix[result_order] #indexing the matrix by the order
+    #take all rows and only last column, gives back list of indexes sorted
+    #indexing the matrix by the order
+    result_order = result_matrix[:,-1].argsort()
+    result_matrix = result_matrix[result_order]
 
     # slice matrix to only top N results
-    result_matrix = result_matrix[-3:,-8:] #-8 for interventions and prediction, want top 3, 3 combinations of intervention
+    #-8 for interventions and prediction, want top 3, 3 combinations of intervention
+    result_matrix = result_matrix[-3:,-8:]
     # post process results if needed ie make list of names for each row
     results = process_results(baseline_prediction,result_matrix)
     # build output dict
     print(f"RESULTS: {results}")
     return results
 
+
 if __name__ == "__main__":
     print("running")
-    data = {
+    new_client = {
         "age": "23",
         "gender": "1",
         "work_experience": "1",
@@ -237,7 +249,5 @@ if __name__ == "__main__":
         "time_unemployed": "1",
         "need_mental_health_support_bool": "1"
     }
-    # print(data)
-    results = interpret_and_calculate(data)
-    print(results)
 
+    print(interpret_and_calculate(new_client))
