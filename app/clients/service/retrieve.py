@@ -21,10 +21,7 @@ async def retrieve_client(client_id: str):
         # Return the client data as JSON
         return client_data
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail="An unexpected error occurred while retrieving the client."
-        ) from e
+        raise e
 
 
 def map_client_data(client: tuple) -> dict:

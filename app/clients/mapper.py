@@ -82,4 +82,3 @@ def create_client_in_db(client_data: ClientUpdateModel) -> int:
         raise Exception(f"Database error occurred: {str(e)}") from e
     finally:
         conn.close()
-
