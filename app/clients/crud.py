@@ -4,7 +4,7 @@ from .schema import PredictionInput
 DB_FILE = "case_management.db"
 
 
-def create_user(data: PredictionInput):
+def create_user_in_db(data: PredictionInput):
     """
     insert user data to database
     """
@@ -37,7 +37,7 @@ def create_user(data: PredictionInput):
 
 def get_all_user_data():
     """
-    Fetch all users from the database.
+    Get all users from the database.
     """
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
@@ -51,7 +51,7 @@ def get_all_user_data():
 
 def get_user_by_id(uid: int):
     """
-    Retrieve a user's information using their ID.
+    Get a user's information using their ID.
     """
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
@@ -70,7 +70,7 @@ def get_user_by_id(uid: int):
 
 def update_user(uid: int, user_data: PredictionInput):
     """
-    Update user information based on their ID. Checks if the user ID exists before updating.
+    Update user information based on their ID.
     """
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
@@ -82,9 +82,9 @@ def update_user(uid: int, user_data: PredictionInput):
     if not user_exists:
         print(f"User with ID {uid} does not exist. Update aborted.")
         conn.close()
-        return False  # Return False to indicate the update failed
+        return False
 
-    # Perform the update if the user exists
+    # update if the user exists
     cur.execute('''
     UPDATE users
     SET age = ?, gender = ?, work_experience = ?, canada_workex = ?, dep_num = ?,
@@ -108,7 +108,7 @@ def update_user(uid: int, user_data: PredictionInput):
     conn.close()
 
     print(f"User with ID {uid} has been updated successfully.")
-    return True  # Return True to indicate the update was successful
+    return True
 
 
 def delete_user(uid: int):
@@ -118,19 +118,17 @@ def delete_user(uid: int):
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
 
-    # Check if the user ID exists
     cur.execute('SELECT id FROM users WHERE id = ?', (uid,))
     user_exists = cur.fetchone()
 
     if not user_exists:
         conn.close()
         print(f"User with ID {uid} not found. Returning 404.")
-        return 404  # Return 404 status if user does not exist
+        return 404
 
-    # Proceed with deletion if the user exists
     cur.execute('DELETE FROM users WHERE id = ?', (uid,))
     conn.commit()
     conn.close()
 
     print(f"User with ID {uid} has been deleted successfully.")
-    return 200  # Return 200 status for successful deletion
+    return 200
