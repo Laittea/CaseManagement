@@ -11,6 +11,7 @@ from app.clients.schema import ClientUpdate
 from app.clients.router import update_client
 from app.database import clients_collection
 
+
 @pytest.mark.asyncio
 async def test_update_client():
     """
