@@ -36,10 +36,15 @@ def delete_client_from_db(client_id: str):
 def update_client_in_db(client_id: str, update_data: dict):
     """Update a client record in the database by client_id."""
     try:
-        validated_data = ClientUpdateModel(**update_data)
-        update_dict = validated_data.model_dump(exclude_unset=True)
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
+        # If update_data is already a ClientUpdateModel, convert it to a dict
+        if isinstance(update_data, ClientUpdateModel):
+            update_dict = update_data.model_dump(exclude_unset=True)
+        else:
+            # If it's a dict, validate it first
+            validated_data = ClientUpdateModel(**update_data)
+            update_dict = validated_data.model_dump(exclude_unset=True)
         # Assuming update_data is a dict with column names as keys
         updates = ", ".join([f"{key} = ?" for key in update_dict.keys()])
         values = list(update_dict.values())
