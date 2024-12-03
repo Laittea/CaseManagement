@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.dirname(__file__), '../app/', '.env')
 load_dotenv(dotenv_path)
 
+# pylint: disable=too-few-public-methods
 class Settings(BaseSettings):
     """
     Settings class to manage application configuration.
