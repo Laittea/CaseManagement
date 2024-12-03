@@ -24,7 +24,6 @@ cryptography==41.0.4
 debugpy==1.6.7
 decorator==5.1.1
 defusedxml==0.7.1
-distutils==24.3.1
 dill==0.3.7
 ecdsa==0.18.0
 exceptiongroup==1.0.4
