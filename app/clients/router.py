@@ -4,10 +4,11 @@ from app.clients.service.logic import interpret_and_calculate
 from app.clients.service.delete import delete_client
 from app.clients.schema import PredictionInput
 
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-from .database import get_db
-from app.clients.service.update import update_client_data, ClientUpdateRequest
+from app.clients.service.update import update_client
+from app.clients.service.update_model import ClientUpdateModel
+from fastapi import Body
+
+
 router = APIRouter(prefix="/clients", tags=["clients"])
 
 @router.post("/predictions")
@@ -22,10 +23,8 @@ async def delete_client_endpoint(client_id: str):
     return await delete_client(client_id)
 
 
-@router.put("/client/{client_id}")
-async def update_client(client_id: int, update_data: ClientUpdateRequest, db: Session = Depends(get_db)):
-    try:
-        updated_client = update_client_data(client_id, update_data.dict(exclude_unset=True), db)
-        return updated_client
-    except Exception as e:
-        raise HTTPException(status_code=404, detail=str(e))
+@router.put("/{client_id}", response_model=ClientUpdateModel)
+async def update_client_endpoint(client_id: str, update_data: ClientUpdateModel = Body(...)):
+    print(f"Update client: {client_id}")
+    return await update_client(client_id, update_data)
+
