@@ -12,10 +12,10 @@ async def test_delete_client_success():
     """
 
     client_data = ClientUpdateModel(
-        age=30,
-        gender="Male",
-        work_experience=5,
-        canada_workex=3,
+        age=23,
+        gender="Female",
+        work_experience=2,
+        canada_workex=5,
     )
     result = await create_client(client_data)
     client_id = str(result['client_id'])
