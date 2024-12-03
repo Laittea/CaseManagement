@@ -7,9 +7,10 @@ from datetime import date, datetime
 from bson import ObjectId
 from fastapi import HTTPException
 import pytest
-from app.clients.schema import ClientUpdate
-from app.clients.router import get_client_by_id, get_all_clients, update_client
+from app.clients.schema import ClientUpdate, Client
+from app.clients.router import create_client, get_client_by_id, get_all_clients, update_client, delete_all_clients, delete_client_by_id
 from app.database import clients_collection
+
 
 @pytest.mark.asyncio
 async def test_create_client():
@@ -17,7 +18,9 @@ async def test_create_client():
     Test the create_client function to ensure it creates a new client in the database correctly.
     """
     # Prepare test data
+    mock_inserted_id = ObjectId()
     test_client_data = {
+        "id": str(mock_inserted_id),  # Add a mock ObjectId here
         "first_name": "Alice",
         "last_name": "Smith",
         "email": "alice.smith@example.com",
@@ -27,11 +30,10 @@ async def test_create_client():
     }
 
     # Mock the insert_one method to return a mock inserted_id
-    mock_inserted_id = ObjectId()
-    clients_collection.insert_one = AsyncMock(return_value=AsyncMock(inserted_id=mock_inserted_id))
+    clients_collection.insert_one = AsyncMock(
+        return_value=AsyncMock(inserted_id=mock_inserted_id))
 
     # Call the function with test data
-    from app.clients.schema import Client
     test_client = Client(**test_client_data)
     created_client = await create_client(test_client)
 
@@ -39,7 +41,8 @@ async def test_create_client():
     assert created_client.id == str(mock_inserted_id)
     for key, value in test_client_data.items():
         if isinstance(value, date):
-            assert created_client.dict()[key] == datetime.combine(value, datetime.min.time()).date()
+            assert created_client.dict()[key] == datetime.combine(
+                value, datetime.min.time()).date()
         else:
             assert created_client.dict()[key] == value
 
@@ -76,13 +79,14 @@ async def test_get_client_by_id():
     assert client["address"] == "123 Elm St, Springfield, IL"
     assert client["phone"] == "555-1234"
 
+
 @pytest.mark.asyncio
 async def test_get_client_by_id_not_found():
     """
     Test the get_client_by_id function to ensure it raises an HTTPException
     when the client is not found.
     """
-    
+
     non_existent_client_id = str(ObjectId())
 
     # Mock the find_one method to return None for a non-existent client
@@ -95,6 +99,7 @@ async def test_get_client_by_id_not_found():
     except HTTPException as e:
         assert e.status_code == 404
         assert e.detail == "Client not found"
+
 
 @pytest.mark.asyncio
 async def test_get_all_clients():
@@ -125,7 +130,8 @@ async def test_get_all_clients():
 
     # Mocking the database find method to return an async iterable
     async def mock_find(*args, **kwargs):
-        return iter(client_data)  # Returning an async iterable (simulating a cursor)
+        # Returning an async iterable (simulating a cursor)
+        return iter(client_data)
 
     # Mock the `find` method
     clients_collection.find = AsyncMock(side_effect=mock_find)
@@ -137,6 +143,7 @@ async def test_get_all_clients():
     assert len(clients) == 2  # Check the length of the returned list
     assert clients[0]["first_name"] == "John"
     assert clients[1]["first_name"] == "Jane"
+
 
 @pytest.mark.asyncio
 async def test_get_all_clients_empty():
@@ -156,6 +163,7 @@ async def test_get_all_clients_empty():
 
     # Perform assertions
     assert clients == []
+
 
 @pytest.mark.asyncio
 async def test_update_client():
@@ -193,7 +201,8 @@ async def test_update_client():
     # Update the mock to return the updated data
     updated_client_data = original_client_data.copy()
     updated_client_data.update(client_update.dict())
-    updated_client_data["_id"] = ObjectId(original_client_id) # Restore the original _id
+    updated_client_data["_id"] = ObjectId(
+        original_client_id)  # Restore the original _id
 
     clients_collection.find_one = AsyncMock(return_value=updated_client_data)
 
@@ -207,6 +216,7 @@ async def test_update_client():
     assert updated_client["date_of_birth"] == datetime(1991, 2, 2).date()
     assert updated_client["address"] == "456 Elm St"
     assert updated_client["phone"] == "098-765-4321"
+
 
 @pytest.mark.asyncio
 async def test_update_client_not_found():
@@ -233,3 +243,122 @@ async def test_update_client_not_found():
     # Additional assertion on the exception
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "Client not found"
+
+
+@pytest.mark.asyncio
+async def test_delete_client_by_id():
+    """
+    Test the delete_client_by_id function to ensure it deletes a client by ID correctly.
+    """
+    # Prepare test data
+    test_client_id = str(ObjectId())
+    client_data = {
+        "_id": ObjectId(test_client_id),
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "date_of_birth": "1990-01-15",
+        "address": "123 Elm St, Springfield, IL",
+        "phone": "555-1234"
+    }
+
+    # Mock find_one to simulate client exists
+    clients_collection.find_one = AsyncMock(return_value=client_data)
+    # Mock delete_one to simulate successful deletion
+    clients_collection.delete_one = AsyncMock(
+        return_value=AsyncMock(deleted_count=1))
+
+    # Call the delete function
+    response = await delete_client_by_id(test_client_id)
+
+    # Assertions
+    assert response["message"] == f"Client with ID {test_client_id} deleted successfully."
+
+
+@pytest.mark.asyncio
+async def test_delete_client_by_id_not_found():
+    """
+    Test the delete_client_by_id function to ensure it raises HTTPException 
+    when the client is not found.
+    """
+    # Prepare test data
+    non_existent_client_id = str(ObjectId())
+
+    # Mock find_one to simulate client does not exist
+    clients_collection.find_one = AsyncMock(return_value=None)
+
+    # Call the delete function and expect an HTTPException
+    with pytest.raises(HTTPException) as exc_info:
+        await delete_client_by_id(non_existent_client_id)
+
+    # Assertions
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "Client not found"
+
+
+# Test case for invalid ObjectId format
+@pytest.mark.asyncio
+async def test_delete_client_by_id_invalid_id():
+    """
+    Test the delete_client_by_id function to ensure it raises HTTPException 
+    when an invalid ObjectId format is provided.
+    """
+    # Invalid ObjectId
+    invalid_client_id = "invalid_object_id"
+
+    # Call the delete function and expect an HTTPException
+    with pytest.raises(HTTPException) as exc_info:
+        await delete_client_by_id(invalid_client_id)
+
+    # Assertions
+    assert exc_info.value.status_code == 400
+    assert exc_info.value.detail == "Invalid ObjectId format"
+
+
+@pytest.mark.asyncio
+async def test_delete_client_no_deletion():
+    """
+    Test the delete_client_by_id function to ensure it raises an HTTPException
+    when the delete operation does not delete any client (i.e., deleted_count == 0).
+    """
+    # Prepare test data
+    test_client_id = str(ObjectId())  # Generate a test ObjectId
+    client_data = {
+        "_id": ObjectId(test_client_id),
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "date_of_birth": "1990-01-15",
+        "address": "123 Elm St, Springfield, IL",
+        "phone": "555-1234"
+    }
+
+    # Mock find_one to simulate the client exists
+    clients_collection.find_one = AsyncMock(return_value=client_data)
+
+    # Mock delete_one to simulate that no client is deleted (deleted_count=0)
+    clients_collection.delete_one = AsyncMock(
+        return_value=AsyncMock(deleted_count=0))
+
+    # Call the delete function and expect an HTTPException to be raised
+    with pytest.raises(HTTPException) as exc_info:
+        await delete_client_by_id(test_client_id)
+
+    # Assertions
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "Client not found"
+
+
+@pytest.mark.asyncio
+async def test_delete_all_clients():
+    """
+    Test the delete_all_clients function to ensure it deletes all clients in the database.
+    """
+    # Mock delete_many to simulate successful deletion
+    clients_collection.delete_many = AsyncMock()
+
+    # Call the delete function
+    response = await delete_all_clients()
+
+    # Assertions
+    assert response["message"] == "All clients deleted successfully."
