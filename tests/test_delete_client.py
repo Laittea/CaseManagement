@@ -2,6 +2,8 @@
 import pytest
 from fastapi import HTTPException
 from app.clients.service.delete import delete_client
+from app.clients.service.create import create_client
+from app.clients.service.update_model import ClientUpdateModel
 
 @pytest.mark.asyncio
 async def test_delete_client_success():
@@ -9,9 +11,20 @@ async def test_delete_client_success():
     Test successful deletion of a client.
     """
 
-    # NOTE: this id should be changed each time running the test
-    # please ensure the id is exist in current db
-    client_id = "61"
+    client_data = ClientUpdateModel(
+        age=30,
+        gender="Male",
+        work_experience=5,
+        canada_workex=3,
+        fluent_english="Yes",
+        level_of_schooling="Bachelor's",
+        currently_employed="Yes"
+    )
+
+    result = await create_client(client_data)
+    client_id = str(result['client_id'])
+
+    # Delete the client created before
     result = await delete_client(client_id)
 
     # Assertions
