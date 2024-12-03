@@ -68,7 +68,7 @@ def get_user_by_id(uid: int):
         return None
 
 
-def update_user(uid: int, user_data: PredictionInput):
+def update_user_in_db(uid: int, user_data: PredictionInput):
     """
     Update user information based on their ID.
     """
@@ -76,6 +76,7 @@ def update_user(uid: int, user_data: PredictionInput):
     cur = conn.cursor()
 
     # Check if the user ID exists
+    print(f"Updating user with ID {uid} using data: {user_data.dict()}")
     cur.execute('SELECT id FROM users WHERE id = ?', (uid,))
     user_exists = cur.fetchone()
 
@@ -105,6 +106,7 @@ def update_user(uid: int, user_data: PredictionInput):
     ))
 
     conn.commit()
+    print("Update query executed and changes committed.")
     conn.close()
 
     print(f"User with ID {uid} has been updated successfully.")

@@ -6,7 +6,7 @@ import pandas as pd
 
 from .service.logic import interpret_and_calculate
 from .schema import PredictionInput
-from .crud import create_user_in_db, get_all_user_data, get_user_by_id, update_user, delete_user
+from .crud import create_user_in_db, get_all_user_data, get_user_by_id, update_user_in_db, delete_user
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
@@ -122,7 +122,7 @@ async def update_user(user_id: int, updated_data: PredictionInput):
         if not existing_client:
             raise HTTPException(status_code=404, detail="Client not found")
 
-        update_status = update_user(user_id, updated_data)
+        update_status = update_user_in_db(user_id, updated_data)
 
         if not update_status:
             raise HTTPException(
