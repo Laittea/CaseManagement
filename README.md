@@ -6,6 +6,101 @@ This also has an API file to interact with the front end, and logic in order to 
 
 # Documentation
 
+## POST `/clients`
+
+### Description
+Creates a new client in the database with the provided information.
+
+---
+
+### Request Body
+
+The fields for the new client must be passed as a JSON object and are encapsulated in the `ClientUpdateModel` located in `update_model.py`. All fields are optional.
+
+| Field                          | Type    | Example                | Description                             |
+|--------------------------------|---------|------------------------|-----------------------------------------|
+| `age`                          | integer | `32`                  | Age of the client.                     |
+| `gender`                       | string  | `"Male"`              | Gender of the client.                  |
+| `work_experience`              | integer | `7`                   | Years of total work experience.        |
+| `canada_workex`                | integer | `3`                   | Years of work experience in Canada.    |
+| `dep_num`                      | integer | `1`                   | Number of dependents.                  |
+| `canada_born`                  | string  | `"No"`                | Whether the client was born in Canada. |
+| `citizen_status`               | string  | `"Citizen"`           | Citizenship status of the client.      |
+| `level_of_schooling`           | string  | `"Master's degree"`   | Highest level of education completed.  |
+| `fluent_english`               | string  | `"Yes"`               | Whether the client is fluent in English. |
+| `reading_english_scale`        | integer | `10`                  | English reading skill level (1-10).    |
+| `speaking_english_scale`       | integer | `10`                  | English speaking skill level (1-10).   |
+| `writing_english_scale`        | integer | `10`                  | English writing skill level (1-10).    |
+| `numeracy_scale`               | integer | `10`                  | Numeracy skill level (1-10).           |
+| `computer_scale`               | integer | `10`                  | Computer skill level (1-10).           |
+| `transportation_bool`          | string  | `"No"`                | Whether transportation support is needed. |
+| `caregiver_bool`               | string  | `"No"`                | Whether the client is a primary caregiver. |
+| `housing`                      | string  | `"Homeowner"`         | Housing status of the client.          |
+| `income_source`                | string  | `"Employment"`        | Source of income.                      |
+| `felony_bool`                  | string  | `"No"`                | Whether the client has a felony record. |
+| `attending_school`             | string  | `"No"`                | Whether the client is currently a student. |
+| `currently_employed`           | string  | `"Yes"`               | Employment status of the client.       |
+| `substance_use`                | string  | `"No"`                | Whether the client has a substance use disorder. |
+| `time_unemployed`              | integer | `0`                   | Time unemployed in years.              |
+| `need_mental_health_support_bool` | string | `"No"`               | Whether the client needs mental health support. |
+
+---
+
+### Request Example
+
+**URL:**
+
+POST /clients
+
+**Request Body:**
+
+```json
+{
+    "age": 30,
+    "gender": "Male",
+    "work_experience": 5,
+    "canada_workex": 3,
+    "level_of_schooling": "Bachelor's",
+    "fluent_english": "Yes",
+    "currently_employed": "Yes"
+}
+```
+
+**Responses**
+**201 Created**
+The client was successfully created.
+
+**Response Example:**
+```json
+{
+    "success": true,
+    "message": "Client successfully created with ID 101",
+    "client_id": "101"
+}
+```
+
+**400 Bad Request**
+The input data is invalid or improperly formatted.
+
+**Response Example:**
+```json
+{
+    "detail": "Invalid input data."
+}
+```
+
+**500 Internal Server Error**
+An unexpected error occurred during client creation.
+
+**Response Example:**
+```json
+{
+    "detail": "An error message describing the issue."
+}
+```
+
+Ensure all required fields are included and properly formatted in the request body. Missing or invalid fields will result in a 400 Bad Request response.
+
 ### **PUT /clients/{client_id}**
 
 #### **Description**
@@ -23,7 +118,7 @@ Updates specific fields of an existing client record.
 
 ### **Request Body**
 
-The fields to be updated must be passed as a JSON object. Unspecified fields will remain unchanged.
+The fields to be updated must be passed as a JSON object and are encapsulated in the `ClientUpdateModel` located in `update_model.py`. Unspecified fields will remain unchanged.
 
 | Field                          | Type    | Example                | Description                             |
 |--------------------------------|---------|------------------------|-----------------------------------------|
