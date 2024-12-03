@@ -41,4 +41,4 @@ jobs:
 
       # Step 4: Run pylint
       - name: Run Pylint
-        run: pylint your_module_name_here # Replace with the name of your module, file, or directory
+        run: pylint ./app; # Replace with the name of your module, file, or directory
