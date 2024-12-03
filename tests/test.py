@@ -8,8 +8,121 @@ from bson import ObjectId
 from fastapi import HTTPException
 import pytest
 from app.clients.schema import ClientUpdate
-from app.clients.router import update_client
+from app.clients.router import get_client_by_id, get_all_clients, update_client
 from app.database import clients_collection
+
+@pytest.mark.asyncio
+async def test_get_client_by_id():
+    """
+    Test the get_client_by_id function to ensure it retrieves a client correctly.
+    """
+
+    client_id = str(ObjectId())  # Generate a test client ID
+    client_data = {
+        "_id": ObjectId(client_id),
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "date_of_birth": "1990-01-15",
+        "address": "123 Elm St, Springfield, IL",
+        "phone": "555-1234"
+    }
+
+    # Mock the database method to return the sample client data
+    clients_collection.find_one = AsyncMock(return_value=client_data)
+
+    # Call the handler directly instead of using TestClient
+    client = await get_client_by_id(client_id)  # Directly calling the handler
+
+    # Perform assertions
+    assert client["id"] == client_id
+    assert client["first_name"] == "John"
+    assert client["last_name"] == "Doe"
+    assert client["email"] == "john.doe@example.com"
+    assert client["date_of_birth"] == "1990-01-15"
+    assert client["address"] == "123 Elm St, Springfield, IL"
+    assert client["phone"] == "555-1234"
+
+@pytest.mark.asyncio
+async def test_get_client_by_id_not_found():
+    """
+    Test the get_client_by_id function to ensure it raises an HTTPException
+    when the client is not found.
+    """
+    
+    non_existent_client_id = str(ObjectId())
+
+    # Mock the find_one method to return None for a non-existent client
+    clients_collection.find_one = AsyncMock(return_value=None)
+
+    # Call the handler directly
+    try:
+        await get_client_by_id(non_existent_client_id)
+        pytest.fail("Expected HTTPException not raised")
+    except HTTPException as e:
+        assert e.status_code == 404
+        assert e.detail == "Client not found"
+
+@pytest.mark.asyncio
+async def test_get_all_clients():
+    """
+    Test the get_all_clients function to ensure it retrieves all clients correctly.
+    """
+    # Sample client data
+    client_data = [
+        {
+            "_id": ObjectId(),
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john.doe@example.com",
+            "date_of_birth": "1990-01-15",
+            "address": "123 Elm St, Springfield, IL",
+            "phone": "555-1234"
+        },
+        {
+            "_id": ObjectId(),
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane.smith@example.com",
+            "date_of_birth": "1985-06-22",
+            "address": "456 Oak St, Chicago, IL",
+            "phone": "555-5678"
+        }
+    ]
+
+    # Mocking the database find method to return an async iterable
+    async def mock_find(*args, **kwargs):
+        return iter(client_data)  # Returning an async iterable (simulating a cursor)
+
+    # Mock the `find` method
+    clients_collection.find = AsyncMock(side_effect=mock_find)
+
+    # Call the function and await the result
+    clients = await get_all_clients()  # Awaiting to get the actual list
+
+    # Perform assertions
+    assert len(clients) == 2  # Check the length of the returned list
+    assert clients[0]["first_name"] == "John"
+    assert clients[1]["first_name"] == "Jane"
+
+@pytest.mark.asyncio
+async def test_get_all_clients_empty():
+    """
+    Test the get_all_clients function to ensure it returns an empty list 
+    when no clients are found.
+    """
+    # Mocking the find method to return an empty async iterable
+    async def mock_find_empty(*args, **kwargs):
+        return iter([])  # Return an empty async iterable
+
+    # Mock the `find` method
+    clients_collection.find = AsyncMock(side_effect=mock_find_empty)
+
+    # Call the function and await the result
+    clients = await get_all_clients()  # Awaiting to get the actual list
+
+    # Perform assertions
+    assert clients == []
 
 @pytest.mark.asyncio
 async def test_update_client():
