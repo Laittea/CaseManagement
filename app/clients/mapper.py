@@ -55,3 +55,31 @@ def update_client_in_db(client_id: str, update_data: dict):
         raise Exception(f"Database error occurred: {str(e)}") from e
     finally:
         conn.close()
+
+def create_client_in_db(client_data: ClientUpdateModel) -> int:
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        if isinstance(client_data, ClientUpdateModel):
+            client_dict = client_data.model_dump(exclude_unset=True)
+        else:
+            validated_data = ClientUpdateModel(**client_data)
+            client_dict = validated_data.model_dump(exclude_unset=True)
+
+        columns = ", ".join(client_dict.keys())
+        placeholders = ", ".join(["?"] * len(client_dict))
+        values = list(client_dict.values())
+
+        cursor.execute(
+            f"INSERT INTO CommonAssessmentTool_Table ({columns}) VALUES ({placeholders})",
+            values
+        )
+        conn.commit()
+
+        # Retrieve the last inserted row's ID (autoincremented client_id)
+        return cursor.lastrowid
+    except sqlite3.Error as e:
+        raise Exception(f"Database error occurred: {str(e)}") from e
+    finally:
+        conn.close()
+
