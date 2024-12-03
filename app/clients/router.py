@@ -13,34 +13,6 @@ from app.database import clients_collection
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 
-mock_clients_db = {
-    1: Client(
-        id="1",
-        first_name="Amy",
-        last_name="Doe",
-        email="amy.doe@example.com",
-        date_of_birth="1995-04-23",
-        address="123 Main St, Springfield",
-        phone="123-456-7890"
-    ),
-    2: Client(
-        id="2",
-        first_name="Bob",
-        last_name="Smith",
-        email="bob.smith@example.com",
-        date_of_birth="1999-08-17",
-        address="456 Elm St, Springfield",
-        phone="098-765-4321"
-    ),
-}
-
-def generate_new_id():
-    """
-    Generate a new unique ID for a client.
-    """
-    return max(mock_clients_db.keys(), default=0) + 1
-
-
 @router.post("/create", response_model=Client, summary="Create a new client")
 async def create_client(client_data: Client):
     """
@@ -79,7 +51,6 @@ async def get_client_by_id(client_id: str):
     del client["_id"]
     return client
 
-
 @router.get("/clients", response_model=List[Client], summary="Retrieve all clients")
 async def get_all_clients():
     """
@@ -88,14 +59,13 @@ async def get_all_clients():
     Returns:
         List[Client]: A list of all clients.
     """
-    clients_cursor = await clients_collection.find().to_list(length=100)
+    clients_cursor = list(await clients_collection.find())
     # Convert _id to id and return the list
     for client in clients_cursor:
         client["id"] = str(client["_id"])
         del client["_id"]
 
     return clients_cursor
-
 
 @router.delete("/clients/{client_id}", response_model=None, summary="Delete client by ID")
 async def delete_client_by_id(client_id: str):
@@ -120,6 +90,7 @@ async def delete_client_by_id(client_id: str):
         raise HTTPException(status_code=404, detail="Client not found")
 
     return {"message": f"Client with ID {client_id} deleted successfully."}
+
 @router.delete("/clients", response_model=None, summary="Delete all clients")
 async def delete_all_clients():
     """
@@ -130,7 +101,6 @@ async def delete_all_clients():
     """
     await clients_collection.delete_many({})
     return {"message": "All clients deleted successfully."}
-
 
 @router.put("/clients/{client_id}", response_model=Client, summary="Update client by ID")
 async def update_client(client_id: str, client_data: ClientUpdate):
