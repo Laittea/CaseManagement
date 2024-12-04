@@ -43,6 +43,14 @@ The fields for the new client must be passed as a JSON object and are encapsulat
 | `substance_use`                | string  | `"No"`                | Whether the client has a substance use disorder. |
 | `time_unemployed`              | integer | `0`                   | Time unemployed in years.              |
 | `need_mental_health_support_bool` | string | `"No"`               | Whether the client needs mental health support. |
+| `employment_assistance`            | integer | `1`                   | Employment assistance score (1-10).    |
+| `life_stabilization`               | integer | `1`                   | Life stabilization score (1-10).       |
+| `retention_services`               | integer | `1`                   | Retention services score (1-10).       |
+| `specialized_services`             | integer | `1`                   | Specialized services score (1-10).     |
+| `employment_related_financial_supports` | integer | `1`                | Employment-related financial support score (1-10). |
+| `employer_financial_supports`      | integer | `1`                   | Employer financial support score (1-10). |
+| `enhanced_referrals`               | integer | `1`                   | Enhanced referrals score (1-10).       |
+| `success_rate`                     | integer | `100`                 | Client's success rate (percentage).    |
 
 ---
 
@@ -68,6 +76,7 @@ POST /clients
 
 **Responses**
 **201 Created**
+
 The client was successfully created.
 
 **Response Example:**
@@ -80,6 +89,7 @@ The client was successfully created.
 ```
 
 **400 Bad Request**
+
 The input data is invalid or improperly formatted.
 
 **Response Example:**
@@ -90,6 +100,7 @@ The input data is invalid or improperly formatted.
 ```
 
 **500 Internal Server Error**
+
 An unexpected error occurred during client creation.
 
 **Response Example:**
@@ -146,6 +157,14 @@ The fields to be updated must be passed as a JSON object and are encapsulated in
 | `substance_use`                | string  | `"No"`                | Whether the client has a substance use disorder. |
 | `time_unemployed`              | integer | `0`                   | Time unemployed in years.              |
 | `need_mental_health_support_bool` | string | `"No"`               | Whether the client needs mental health support. |
+| `employment_assistance`            | integer | `1`                   | Employment assistance score (1-10).    |
+| `life_stabilization`               | integer | `1`                   | Life stabilization score (1-10).       |
+| `retention_services`               | integer | `1`                   | Retention services score (1-10).       |
+| `specialized_services`             | integer | `1`                   | Specialized services score (1-10).     |
+| `employment_related_financial_supports` | integer | `1`                | Employment-related financial support score (1-10). |
+| `employer_financial_supports`      | integer | `1`                   | Employer financial support score (1-10). |
+| `enhanced_referrals`               | integer | `1`                   | Enhanced referrals score (1-10).       |
+| `success_rate`                     | integer | `100`                 | Client's success rate (percentage).    |
 
 ---
 
@@ -307,4 +326,110 @@ An unexpected error occurred on the server.
 This endpoint requires the `client_id` to be a valid **integer string**.
 
 
+## POST `/search`
+
+### Description
+Searches for a list of clients based on the provided JSON criteria. Returns all clients that match the specified conditions.
+The criteria are encapsulated in the `ClientUpdateModel` defined in `update_model.py`.
+Any combination of fields can be provided in the JSON request body for filtering clients. Fields left empty will not be used as filters.
+
+### Request Body
+
+| Field                          | Type    | Example                | Description                             |
+|--------------------------------|---------|------------------------|-----------------------------------------|
+| `age`                          | integer | `32`                  | Age of the client.                     |
+| `gender`                       | string  | `"Male"`              | Gender of the client.                  |
+| `work_experience`              | integer | `7`                   | Years of total work experience.        |
+| `canada_workex`                | integer | `3`                   | Years of work experience in Canada.    |
+| `dep_num`                      | integer | `1`                   | Number of dependents.                  |
+| `canada_born`                  | string  | `"No"`                | Whether the client was born in Canada. |
+| `citizen_status`               | string  | `"Citizen"`           | Citizenship status of the client.      |
+| `level_of_schooling`           | string  | `"Master's degree"`   | Highest level of education completed.  |
+| `fluent_english`               | string  | `"Yes"`               | Whether the client is fluent in English. |
+| `reading_english_scale`        | integer | `10`                  | English reading skill level (1-10).    |
+| `speaking_english_scale`       | integer | `10`                  | English speaking skill level (1-10).   |
+| `writing_english_scale`        | integer | `10`                  | English writing skill level (1-10).    |
+| `numeracy_scale`               | integer | `10`                  | Numeracy skill level (1-10).           |
+| `computer_scale`               | integer | `10`                  | Computer skill level (1-10).           |
+| `transportation_bool`          | string  | `"No"`                | Whether transportation support is needed. |
+| `caregiver_bool`               | string  | `"No"`                | Whether the client is a primary caregiver. |
+| `housing`                      | string  | `"Homeowner"`         | Housing status of the client.          |
+| `income_source`                | string  | `"Employment"`        | Source of income.                      |
+| `felony_bool`                  | string  | `"No"`                | Whether the client has a felony record. |
+| `attending_school`             | string  | `"No"`                | Whether the client is currently a student. |
+| `currently_employed`           | string  | `"Yes"`               | Employment status of the client.       |
+| `substance_use`                | string  | `"No"`                | Whether the client has a substance use disorder. |
+| `time_unemployed`              | integer | `0`                   | Time unemployed in years.              |
+| `need_mental_health_support_bool` | string | `"No"`               | Whether the client needs mental health support. |
+| `employment_assistance`            | integer | `1`                   | Employment assistance score (1-10).    |
+| `life_stabilization`               | integer | `1`                   | Life stabilization score (1-10).       |
+| `retention_services`               | integer | `1`                   | Retention services score (1-10).       |
+| `specialized_services`             | integer | `1`                   | Specialized services score (1-10).     |
+| `employment_related_financial_supports` | integer | `1`                | Employment-related financial support score (1-10). |
+| `employer_financial_supports`      | integer | `1`                   | Employer financial support score (1-10). |
+| `enhanced_referrals`               | integer | `1`                   | Enhanced referrals score (1-10).       |
+| `success_rate`                     | integer | `100`                 | Client's success rate (percentage).    |
+
+
+
+### Request Example
+
+**URL**:
+
+POST /search
+
+
+**Request Body**:
+```json
+{
+    "age": 30,
+    "housing": "None"
+}
+
+**Responses**
+**200 OK**
+
+The list of clients matching the criteria was successfully retrieved.
+
+**Response Example:**
+
+```json
+[
+    {
+        "client_id": "1",
+        "age": 30,
+        "housing": "None",
+        "work_experience": 5,
+        "success_rate": 80
+    },
+    {
+        "client_id": "2",
+        "age": 30,
+        "housing": "None",
+        "work_experience": 6,
+        "success_rate": 85
+    }
+]
+
+```
+**404 Not Found**
+
+No clients matched the given criteria.
+
+**Response Example:**
+```json
+{
+    "detail": "No clients found matching the criteria."
+}
+```
+
+**500 Internal Server Error**
+An unexpected error occurred on the server.
+
+**Response Example:**
+```json
+{
+    "detail": "An error message describing the issue."
+}
+```
 
