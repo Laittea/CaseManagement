@@ -23,6 +23,8 @@ jobs:
       run: |
         pylint ./app; # pylint $(git ls-files '*.py')
     - name: Run tests with coverage
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         pytest --cov=app tests/ --cov-report=xml
     - name: Upload coverage reports
