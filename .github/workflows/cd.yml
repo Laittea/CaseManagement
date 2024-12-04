@@ -1,0 +1,39 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Build Docker Image
+    - name: Build Docker Image
+      run: docker build -t my-api .
+
+    # Run the Docker Container
+    - name: Run Docker Container
+      run: docker run -d --name my-container -p 8080:80 my-api
+
+    # Test the Running Container
+    - name: Test API Endpoints
+      run: |
+        sleep 10 # Allow some time for the container to start
+        curl --fail http://0.0.0.0:8080/docs || exit 1
+        echo "API is accessible and working!"
+
+    # Stop and Remove the Container
+    - name: Cleanup
+      run: |
+        docker stop my-container
+        docker rm my-container

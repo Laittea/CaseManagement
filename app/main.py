@@ -1,3 +1,4 @@
+"""Main function"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,5 +17,3 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods, including OPTIONS
     allow_headers=["*"],  # Allows all headers
 )
-
-
