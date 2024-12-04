@@ -1,0 +1,57 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setup Python environment
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # Run linter
+      - name: Run linter
+        run: |
+          pylint ./app
+      
+      # Run tests
+      - name: Run tests
+        run: |
+          pytest tests/ --maxfail=1 --disable-warnings -q
+
+      # Build Docker image
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t common-assessment-tool:${{ github.sha }} .
+
+      # Push Docker image
+      - name: Push Docker image
+        run: |
+          docker tag common-assessment-tool:${{ github.sha }} shan533/common-assessment-tool:${{ github.sha }}
+          docker push shan533/common-assessment-tool:${{ github.sha }}
