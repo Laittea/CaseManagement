@@ -1,5 +1,15 @@
-This will contain the model used for the project that based on the input information will give the social workers the clients baseline level of success and what their success will be after certain interventions.
+The CommonAssessmentTool project is a RESTful API-based system designed to manage and process user data. The project includes endpoints for creating, updating, retrieving, and deleting user records, all backed by a SQLite database. 
 
-The model works off of dummy data of several combinations of clients alongside the interventions chosen for them as well as their success rate at finding a job afterward. The model will be updated by the case workers by inputing new data for clients with their updated outcome information, and it can be updated on a daily, weekly, or monthly basis.
+Core CRUD Functionalities:
+Description: Implemented endpoints for creating users (POST /create-user), retrieving all users (GET /users), fetching users by ID (GET /users/{id}), updating user details (PUT /users/{id}), and deleting users (DELETE /users/{id}).
 
-This also has an API file to interact with the front end, and logic in order to process the interventions coming from the front end. This includes functions to clean data, create a matrix of all possible combinations in order to get the ones with the highest increase of success, and output the results in a way the front end can interact with.
+Database Integration and Schema Management:
+Description: Designed a structured SQLite database schema to store user data with relevant fields. Added logic to initialize and verify the database schema during the application startup.
+
+Unit and Integration Testing:
+Description: Developed a comprehensive suite of tests using pytest and FastAPI’s test client. The tests validate the behavior of all endpoints under various scenarios, including success cases and edge cases (e.g., non-existent user IDs).
+
+Improved Error Handling and Validation:
+Description: Standardized error responses and added detailed exception handling for common issues such as invalid user inputs, database constraints, and non-existent records.
+
+These changes enhance the overall stability, scalability, and usability of the CommonAssessmentTool project, providing a strong foundation for managing user data effectively while maintaining a high-quality development process.

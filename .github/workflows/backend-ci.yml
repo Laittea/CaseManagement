@@ -1,0 +1,32 @@
+name: Backend Docker CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build Backend Docker image
+      run: |
+        docker build -t cat-backend:test .
+
+    - name: Run Backend container
+      run: |
+        docker run -d -p 5000:5000 --name backend-container cat-backend:test
+        # Wait for container to start and check its status
+        sleep 10
+        docker ps
+        docker logs backend-container
+
+    - name: Clean up
+      if: always()
+      run: |
+        docker stop backend-container || true
+        docker rm backend-container || true
