@@ -62,5 +62,5 @@ def test_interpret_and_calculate():
     results = interpret_and_calculate(data)
     
     assert isinstance(results, dict)
-    assert "baselines" in results
+    assert "baseline" in results
     assert "interventions" in results 
