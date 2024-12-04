@@ -6,7 +6,7 @@ from app.clients.service.create import create_client
 from app.clients.service.logic import interpret_and_calculate
 from app.clients.service.delete import delete_client
 from app.clients.schema import PredictionInput
-from app.clients.service.retrieve import retrieve_client
+from app.clients.service.retrieve import retrieve_client, search_clients
 
 from app.clients.service.update import update_client
 from app.clients.service.update_model import ClientUpdateModel
@@ -43,3 +43,8 @@ async def query_client(client_id: str):
 async def create_client_endpoint(client_data: ClientUpdateModel = Body(...)):
     print("Create new client")
     return await create_client(client_data)
+
+@router.post("/search")
+async def search_clients_endpoint(criteria: ClientUpdateModel = Body(...)):
+    print("Search clients with given info")
+    return await search_clients(criteria)

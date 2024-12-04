@@ -1,10 +1,18 @@
 from fastapi import HTTPException
-from app.clients.mapper import get_client
+from app.clients.mapper import get_client, get_all_clients_with_info
 
 def check_valid_input(client_id):
     if not client_id.isdigit():
         raise HTTPException(status_code=400, detail="Invalid client_id format.")
 
+async def search_clients(criteria):
+    try:
+        clients = get_all_clients_with_info(criteria)
+        if not clients:
+            raise HTTPException(status_code=404, detail="No clients found matching the criteria.")
+        return clients
+    except Exception as e:
+        raise e
 
 async def retrieve_client(client_id: str):
     try:
