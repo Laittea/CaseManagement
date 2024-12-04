@@ -75,7 +75,7 @@ POST /clients
 ```
 
 **Responses**
-**201 Created**
+**200 Created**
 
 The client was successfully created.
 
