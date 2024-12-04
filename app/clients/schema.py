@@ -1,6 +1,13 @@
+"""
+    previous model from orginal design
+"""
+
 from pydantic import BaseModel
 
 class PredictionInput(BaseModel):
+    """
+        previous class design
+    """
     age: int
     gender: str
     work_experience: int
