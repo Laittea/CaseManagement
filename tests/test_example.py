@@ -2,7 +2,7 @@
 This module contains tests for the client update functionality in the FastAPI application.
 """
 
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 from datetime import date, datetime
 from bson import ObjectId
 from fastapi import HTTPException
@@ -128,21 +128,22 @@ async def test_get_all_clients():
         }
     ]
 
-    # Mocking the database find method to return an async iterable
-    async def mock_find(*args, **kwargs):
-        # Returning an async iterable (simulating a cursor)
-        return iter(client_data)
+    # Mocking the async cursor with to_list method
+    class MockCursor:
+        async def to_list(self, length):
+            return client_data
 
-    # Mock the `find` method
-    clients_collection.find = AsyncMock(side_effect=mock_find)
+    mock_cursor = MockCursor()
 
-    # Call the function and await the result
-    clients = await get_all_clients()  # Awaiting to get the actual list
+    # Mock the `find` method to return the mock_cursor
+    with patch('app.database.clients_collection.find', return_value=mock_cursor):
+        # Call the function and await the result
+        clients = await get_all_clients()
 
-    # Perform assertions
-    assert len(clients) == 2  # Check the length of the returned list
-    assert clients[0]["first_name"] == "John"
-    assert clients[1]["first_name"] == "Jane"
+        # Perform assertions
+        assert len(clients) == 2  # Check the length of the returned list
+        assert clients[0]["first_name"] == "John"
+        assert clients[1]["first_name"] == "Jane"
 
 
 @pytest.mark.asyncio
@@ -151,18 +152,20 @@ async def test_get_all_clients_empty():
     Test the get_all_clients function to ensure it returns an empty list 
     when no clients are found.
     """
-    # Mocking the find method to return an empty async iterable
-    async def mock_find_empty(*args, **kwargs):
-        return iter([])  # Return an empty async iterable
+    client_data = []
+    class MockCursor:
+        async def to_list(self, length):
+            return client_data
 
-    # Mock the `find` method
-    clients_collection.find = AsyncMock(side_effect=mock_find_empty)
+    mock_cursor = MockCursor()
 
-    # Call the function and await the result
-    clients = await get_all_clients()  # Awaiting to get the actual list
+    # Mock the `find` method to return the mock_cursor
+    with patch('app.database.clients_collection.find', return_value=mock_cursor):
+        # Call the function and await the result
+        clients = await get_all_clients()
 
-    # Perform assertions
-    assert clients == []
+        # Perform assertions
+        assert clients == []
 
 
 @pytest.mark.asyncio

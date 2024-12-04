@@ -62,7 +62,8 @@ async def get_all_clients():
     Returns:
         List[Client]: A list of all clients.
     """
-    clients_cursor = list(await clients_collection.find())
+    # clients_cursor = list(await clients_collection.find())
+    clients_cursor = await clients_collection.find().to_list(length=None)
     # Convert _id to id and return the list
     for client in clients_cursor:
         client["id"] = str(client["_id"])
