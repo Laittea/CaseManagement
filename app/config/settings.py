@@ -17,7 +17,6 @@ else:
         "ERROR: No .env or .env.example file found! Using system environment variables."
     )
 
-
 # Security
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret-key")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
@@ -26,14 +25,14 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./sql_app.db")
 
 # Admin User
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@example.com")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 # Case Worker
-WORKER_USERNAME = os.getenv("WORKER_USERNAME", "case_worker1")
-WORKER_EMAIL = os.getenv("WORKER_EMAIL", "caseworker1@example.com")
-WORKER_PASSWORD = os.getenv("WORKER_PASSWORD", "worker123")
+WORKER_USERNAME = os.getenv("WORKER_USERNAME")
+WORKER_EMAIL = os.getenv("WORKER_EMAIL")
+WORKER_PASSWORD = os.getenv("WORKER_PASSWORD")
 
 # CSV File Path
 DATA_CSV_PATH = os.getenv("DATA_CSV_PATH", "app/ml/data/data_commontool.csv")
