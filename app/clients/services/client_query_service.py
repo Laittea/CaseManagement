@@ -10,21 +10,25 @@ class ClientQueryService:
         self.db = db
 
     def get_clients_by_criteria(self, **filters):
-        """Fetch clients based on multiple filters"""
         query = self.db.query(Client)
 
-        # Apply filters dynamically
+        # Explicitly handle "age_min"
+        if "age_min" in filters and filters["age_min"] is not None:
+            age_min = filters["age_min"]
+            if age_min < 18:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Minimum age must be at least 18",
+                )
+            query = query.filter(Client.age >= age_min)
+            del filters["age_min"]
+
+        # handle other filters
         for field, value in filters.items():
             if value is not None:
                 query = query.filter(getattr(Client, field) == value)
 
-        try:
-            return query.all()
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error retrieving clients: {str(e)}",
-            )
+        return query.all()
 
     def get_clients_by_services(self, **service_filters):
         """Fetch clients based on service status filters"""

@@ -355,7 +355,6 @@ class ClientService:
         try:
             # Delete associated client_cases
             db.query(ClientCase).filter(ClientCase.client_id == client_id).delete()
-
             # Delete the client
             db.delete(client)
             db.commit()

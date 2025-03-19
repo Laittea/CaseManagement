@@ -8,7 +8,9 @@ class ClientCase(Base):
 
     __tablename__ = "client_cases"
 
-    client_id = Column(Integer, ForeignKey("clients.id"), primary_key=True)
+    client_id = Column(
+        Integer, ForeignKey("clients.id", ondelete="CASCADE"), primary_key=True
+    )
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
 
     employment_assistance = Column(Boolean)

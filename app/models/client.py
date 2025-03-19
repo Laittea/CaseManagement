@@ -52,5 +52,4 @@ class Client(Base):
     substance_use = Column(Boolean)
     time_unemployed = Column(Integer, CheckConstraint("time_unemployed >= 0"))
     need_mental_health_support_bool = Column(Boolean)
-
-    cases = relationship("ClientCase", back_populates="client")
+    cases = relationship("ClientCase", back_populates="client", passive_deletes=True)
