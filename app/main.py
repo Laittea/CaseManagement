@@ -10,6 +10,7 @@ from app.database import engine
 from app.clients.router import router as clients_router
 from app.auth.router import router as auth_router
 from fastapi.middleware.cors import CORSMiddleware
+from app.ml_models.router import router as ml_router
 
 # Initialize database tables
 models.Base.metadata.create_all(bind=engine)
@@ -20,6 +21,7 @@ app = FastAPI(title="Case Management API", description="API for managing client 
 # Include routers
 app.include_router(auth_router)
 app.include_router(clients_router)
+app.include_router(ml_router)
 
 # Configure CORS middleware
 app.add_middleware(
