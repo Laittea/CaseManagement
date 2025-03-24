@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "case-management"
+version = "0.1.0"
+description = "Case Management System"
+requires-python = ">=3.8"
+
+
+[tool.setuptools]
+packages = ["app"]
+
+[tool.setuptools.dynamic]
+version = {attr = "app.__version__"} 
