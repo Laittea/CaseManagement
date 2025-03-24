@@ -141,4 +141,10 @@ webencodings==0.5.1
 websocket-client==1.5.1
 websockets==11.0.3
 widgetsnbextension==4.0.7
+flake8==7.0.0
+flake8-docstrings==1.7.0
+flake8-quotes==3.4.0
+flake8-bugbear==24.2.6
+flake8-comprehensions==3.14.0
+flake8-simplify==0.21.1
 
