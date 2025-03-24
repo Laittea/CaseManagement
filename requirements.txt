@@ -71,7 +71,7 @@ nbformat==5.8.0
 nest-asyncio==1.5.6
 notebook==6.5.4
 notebook_shim==0.2.2
-numpy==1.24.2
+numpy==2.2.4
 packaging==23.2
 pandas==2.0.0
 pandocfilters==1.5.0
@@ -146,5 +146,5 @@ flake8-docstrings==1.7.0
 flake8-quotes==3.4.0
 flake8-bugbear==24.2.6
 flake8-comprehensions==3.14.0
-flake8-simplify==0.21.1
+flake8-simplify==0.19.3
 
