@@ -5,6 +5,7 @@ Handles database initialization and CORS middleware configuration.
 """
 
 from fastapi import FastAPI
+from app.model.router import router as model_router
 from app import models
 from app.database import engine
 from app.clients.router import router as clients_router
@@ -20,6 +21,8 @@ app = FastAPI(title="Case Management API", description="API for managing client 
 # Include routers
 app.include_router(auth_router)
 app.include_router(clients_router)
+app.include_router(model_router)  
+
 
 # Configure CORS middleware
 app.add_middleware(
