@@ -4,7 +4,7 @@ from fastapi import status
 
 # Test GET Operations
 def test_get_clients_unauthorized(client):
-    """Test that unauthorized access is prevented"""
+    """Test that unauthorized access is prevented."""
     response = client.get("/clients/")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -109,7 +109,7 @@ def test_update_client(client, admin_headers):
     assert response.status_code == status.HTTP_200_OK
     updated_client = response.json()
     assert updated_client["age"] == 26
-    assert updated_client["currently_employed"] == True
+    assert updated_client["currently_employed"] is True
     assert updated_client["time_unemployed"] == 0
 
 
