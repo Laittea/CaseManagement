@@ -15,9 +15,9 @@ __pycache__/
 *.so
 *.pyc
 
-# Database
-*.db
-*.sqlite3
+# # Database
+# *.db
+# *.sqlite3
 
 # Jupyter Notebook
 .ipynb_checkpoints
