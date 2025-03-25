@@ -35,16 +35,16 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-@app.get("/api/model-info", response_model=Dict[str, str])
-async def get_model_info():
+@app.get("/api/current-model", response_model=Dict[str, str])
+async def get_current_model():
     """
-    Get information about the current model being used.
+    Get information about the current model being used in the system.
     Returns:
-        Dict containing model information including version and type.
+        Dict containing current model information including name and version.
     """
     return {
-        "model_type": "Case Management Model",
-        "version": "1.0.0",
-        "framework": "FastAPI",
-        "api_version": app.version
+        "current_model": "Case Management Model",
+        "model_version": "1.0.0",
+        "status": "active",
+        "last_updated": "2024-03-25"
     }
