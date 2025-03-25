@@ -48,3 +48,18 @@ async def get_current_model():
         "status": "active",
         "last_updated": "2024-03-25"
     }
+    
+@app.get("/api/available-models", response_model=Dict[str, list])
+async def get_available_models():
+    """
+    Get a list of available machine learning models supported by the system.
+    Returns:
+        Dict containing a list of model names.
+    """
+    return {
+        "available_models": [
+            "logistic_regression",
+            "decision_tree",
+            "random_forest"
+        ]
+    }
