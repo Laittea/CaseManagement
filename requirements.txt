@@ -19,6 +19,3 @@ python-multipart==0.0.6
 pytest-cov==4.1.0
 bcrypt==4.0.1
 scikit-learn>=0.24.0
-pandas==1.5.3    # For data processing
-numpy==1.23.5    # For numerical operations with data
-jose==3.3.0      # For JWT handling
