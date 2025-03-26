@@ -5,7 +5,7 @@ Handles database initialization and CORS middleware configuration.
 """
 
 from fastapi import FastAPI
-from app import models
+from app.models import Base, User, UserRole, Client, ClientCase
 from app.database import engine
 from app.clients.router import router as clients_router
 from app.auth.router import router as auth_router
@@ -15,9 +15,10 @@ from pydantic import BaseModel
 from app.core.model_manager import ModelManager  # Import the model manager
 from app.clients.schema import PredictionInput  # Import the schema
 from pydantic import ValidationError
+from fastapi.responses import HTMLResponse
 
 # Initialize database tables
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 # Create FastAPI application
 app = FastAPI(
@@ -41,6 +42,53 @@ app.add_middleware(
 
 # Initialize ModelManager for managing ML models
 model_manager = ModelManager()
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """
+    Root endpoint that provides a welcome message and links to the API documentation.
+    """
+    return """
+    <html>
+        <head>
+            <title>Case Management API</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    line-height: 1.6;
+                }
+                h1 { color: #2c3e50; }
+                .links {
+                    margin-top: 20px;
+                }
+                .links a {
+                    display: inline-block;
+                    margin-right: 20px;
+                    padding: 10px 20px;
+                    background-color: #3498db;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                }
+                .links a:hover {
+                    background-color: #2980b9;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Welcome to Case Management API</h1>
+            <p>This is the root endpoint of the Case Management API. Please use the following links to access the API documentation:</p>
+            <div class="links">
+                <a href="/docs">Swagger UI Documentation</a>
+                <a href="/redoc">ReDoc Documentation</a>
+            </div>
+        </body>
+    </html>
+    """
 
 
 # Pydantic model to handle the model name for switching

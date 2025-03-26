@@ -8,6 +8,10 @@ from app.database import get_db
 from app.models import User, UserRole
 from passlib.context import CryptContext
 from pydantic import BaseModel, Field, validator
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -35,7 +39,7 @@ class UserResponse(BaseModel):
 
 
 # Configuration
-SECRET_KEY = "your-secret-key-here"
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
