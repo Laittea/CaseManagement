@@ -42,9 +42,11 @@ app.add_middleware(
 # Initialize ModelManager for managing ML models
 model_manager = ModelManager()
 
+
 # Pydantic model to handle the model name for switching
 class ModelSwitchRequest(BaseModel):
     model_name: str
+
 
 @app.get("/api/current-model", response_model=Dict[str, str])
 async def get_current_model():
@@ -57,8 +59,9 @@ async def get_current_model():
         "current_model": model_manager.get_current_model()["current_model"],
         "model_version": "1.0.0",
         "status": "active",
-        "last_updated": "2024-03-25"
+        "last_updated": "2024-03-25",
     }
+
 
 @app.get("/api/available-models", response_model=Dict[str, list])
 async def get_available_models():
@@ -68,6 +71,7 @@ async def get_available_models():
         Dict containing a list of model names.
     """
     return model_manager.get_available_models()
+
 
 @app.post("/api/switch-model")
 async def switch_model(model_request: ModelSwitchRequest):
@@ -80,6 +84,7 @@ async def switch_model(model_request: ModelSwitchRequest):
     """
     result = model_manager.switch_model(model_request.model_name)
     return result
+
 
 @app.post("/predict")
 async def predict(data: PredictionInput):
@@ -97,27 +102,31 @@ async def predict(data: PredictionInput):
             data.work_experience,
             data.canada_workex,
             int(data.level_of_schooling),  # Convert to integer
-            1 if data.fluent_english.lower() == 'true' else 0,  # Convert to 0/1
+            1 if data.fluent_english.lower() == "true" else 0,  # Convert to 0/1
             data.reading_english_scale,
             data.speaking_english_scale,
             data.writing_english_scale,
             data.numeracy_scale,
             data.computer_scale,
-            1 if data.transportation_bool.lower() == 'true' else 0,  # Convert to 0/1
-            1 if data.caregiver_bool.lower() == 'true' else 0,  # Convert to 0/1
+            1 if data.transportation_bool.lower() == "true" else 0,  # Convert to 0/1
+            1 if data.caregiver_bool.lower() == "true" else 0,  # Convert to 0/1
             int(data.housing),  # Convert to integer
             int(data.income_source),  # Convert to integer
-            1 if data.felony_bool.lower() == 'true' else 0,  # Convert to 0/1
-            1 if data.attending_school.lower() == 'true' else 0,  # Convert to 0/1
-            1 if data.currently_employed.lower() == 'true' else 0,  # Convert to 0/1
-            1 if data.substance_use.lower() == 'true' else 0,  # Convert to 0/1
+            1 if data.felony_bool.lower() == "true" else 0,  # Convert to 0/1
+            1 if data.attending_school.lower() == "true" else 0,  # Convert to 0/1
+            1 if data.currently_employed.lower() == "true" else 0,  # Convert to 0/1
+            1 if data.substance_use.lower() == "true" else 0,  # Convert to 0/1
             data.time_unemployed,
-            1 if data.need_mental_health_support_bool.lower() == 'true' else 0,  # Convert to 0/1
+            1
+            if data.need_mental_health_support_bool.lower() == "true"
+            else 0,  # Convert to 0/1
         ]
 
         # Convert to 2D array for prediction
         model = model_manager.current_model
-        prediction = model.predict([features])  # Make sure the input is in the expected format
+        prediction = model.predict(
+            [features]
+        )  # Make sure the input is in the expected format
 
         # Return the prediction as a list
         return {"prediction": prediction.tolist()}

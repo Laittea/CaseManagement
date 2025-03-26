@@ -1,4 +1,10 @@
-from app.models.ml_models import LogisticRegressionModel, DecisionTreeModel, RandomForestModel, load_data
+from app.models.ml_models import (
+    LogisticRegressionModel,
+    DecisionTreeModel,
+    RandomForestModel,
+    load_data,
+)
+
 
 class ModelManager:
     def __init__(self):
@@ -7,7 +13,7 @@ class ModelManager:
         self.available_models = {
             "logistic_regression": LogisticRegressionModel(),
             "decision_tree": DecisionTreeModel(),
-            "random_forest": RandomForestModel()
+            "random_forest": RandomForestModel(),
         }
 
         # Train the models

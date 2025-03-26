@@ -4,28 +4,40 @@ from app.main import app
 
 client = TestClient(app)
 
+
 @pytest.fixture
 def admin_headers():
     # Assume you already have the admin token or headers set up here
     return {"Authorization": "Bearer YOUR_ADMIN_TOKEN"}
 
+
 def test_switch_model_valid(client, admin_headers):
     # Test that switching to a valid model works
-    response = client.post("/api/switch-model", json={"model_name": "decision_tree"}, headers=admin_headers)
+    response = client.post(
+        "/api/switch-model", json={"model_name": "decision_tree"}, headers=admin_headers
+    )
     assert response.status_code == 200
-    assert response.json() == {"status": "success", "message": "Model switched to decision_tree"}
+    assert response.json() == {
+        "status": "success",
+        "message": "Model switched to decision_tree",
+    }
+
 
 def test_switch_model_invalid(client, admin_headers):
     # Test that switching to an invalid model returns an error
-    response = client.post("/api/switch-model", json={"model_name": "invalid_model"}, headers=admin_headers)
+    response = client.post(
+        "/api/switch-model", json={"model_name": "invalid_model"}, headers=admin_headers
+    )
     assert response.status_code == 200
     assert response.json() == {"status": "error", "message": "Model not available."}
+
 
 def test_get_current_model(client, admin_headers):
     # Test getting the current active model
     response = client.get("/api/current-model", headers=admin_headers)
     assert response.status_code == 200
     assert "current_model" in response.json()
+
 
 def test_prediction(client, admin_headers):
     # Test prediction with valid data after switching model
@@ -59,4 +71,6 @@ def test_prediction(client, admin_headers):
     response = client.post("/predict", json=data, headers=admin_headers)
     print(response.json())
     assert response.status_code == 200
-    assert "prediction" in response.json()  # Ensure the response contains the prediction
+    assert (
+        "prediction" in response.json()
+    )  # Ensure the response contains the prediction
