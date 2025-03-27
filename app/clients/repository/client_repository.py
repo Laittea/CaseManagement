@@ -9,6 +9,7 @@ from fastapi import HTTPException, status
 from app.models import Client, ClientCase
 from app.core.repository import IRepository
 
+
 class ClientRepository(IRepository[Client]):
     """Repository for Client entity operations."""
 
@@ -18,7 +19,7 @@ class ClientRepository(IRepository[Client]):
         if not client:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Client with id {id} not found"
+                detail=f"Client with id {id} not found",
             )
         return client
 
@@ -27,12 +28,12 @@ class ClientRepository(IRepository[Client]):
         if skip < 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Skip value cannot be negative"
+                detail="Skip value cannot be negative",
             )
         if limit < 1:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Limit must be greater than 0"
+                detail="Limit must be greater than 0",
             )
         return db.query(Client).offset(skip).limit(limit).all()
 
@@ -47,7 +48,7 @@ class ClientRepository(IRepository[Client]):
             db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to create client: {str(e)}"
+                detail=f"Failed to create client: {str(e)}",
             )
 
     def update(self, db: Session, id: int, data: Dict[str, Any]) -> Client:
@@ -63,7 +64,7 @@ class ClientRepository(IRepository[Client]):
             db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to update client: {str(e)}"
+                detail=f"Failed to update client: {str(e)}",
             )
 
     def delete(self, db: Session, id: int) -> None:
@@ -79,33 +80,33 @@ class ClientRepository(IRepository[Client]):
             db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to delete client: {str(e)}"
+                detail=f"Failed to delete client: {str(e)}",
             )
 
     def get_by_criteria(self, db: Session, criteria: Dict[str, Any]) -> List[Client]:
         """Get clients by multiple criteria."""
         query = db.query(Client)
         filters = []
-        
+
         for field, value in criteria.items():
             if value is not None:
-                if '__' in field:
-                    field_name, operator = field.split('__')
+                if "__" in field:
+                    field_name, operator = field.split("__")
                     model_field = getattr(Client, field_name)
-                    if operator == 'ge':
+                    if operator == "ge":
                         filters.append(model_field >= value)
-                    elif operator == 'le':
+                    elif operator == "le":
                         filters.append(model_field <= value)
-                    elif operator == 'gt':
+                    elif operator == "gt":
                         filters.append(model_field > value)
-                    elif operator == 'lt':
+                    elif operator == "lt":
                         filters.append(model_field < value)
                 else:
                     filters.append(getattr(Client, field) == value)
-        
+
         if filters:
             query = query.filter(and_(*filters))
-        
+
         return query.all()
 
     def get_by_success_rate(self, db: Session, min_rate: int) -> List[Client]:
@@ -113,8 +114,11 @@ class ClientRepository(IRepository[Client]):
         if not (0 <= min_rate <= 100):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Success rate must be between 0 and 100"
+                detail="Success rate must be between 0 and 100",
             )
-        return db.query(Client).join(Client.cases).filter(
-            ClientCase.success_rate >= min_rate
-        ).all() 
+        return (
+            db.query(Client)
+            .join(Client.cases)
+            .filter(ClientCase.success_rate >= min_rate)
+            .all()
+        )

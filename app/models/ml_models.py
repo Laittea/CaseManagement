@@ -9,6 +9,7 @@ from app.models import Client, ClientCase
 
 class MLModel:
     """Base class for machine learning models."""
+
     def fit(self, X_train, y_train):
         pass
 
@@ -69,7 +70,7 @@ class RandomForestModel(MLModel):
 
 def load_data():
     """Load and split the client and case data for training/testing."""
-    
+
     # Create a session to interact with the database
     db = SessionLocal()
 
@@ -88,28 +89,30 @@ def load_data():
 
     # Loop over each client and their corresponding case
     for client, case in zip(clients, client_cases):
-        X.append([
-            client.age,
-            client.work_experience,
-            client.canada_workex,
-            client.level_of_schooling,
-            client.fluent_english,
-            client.reading_english_scale,
-            client.speaking_english_scale,
-            client.writing_english_scale,
-            client.numeracy_scale,
-            client.computer_scale,
-            client.transportation_bool,
-            client.caregiver_bool,
-            client.housing,
-            client.income_source,
-            client.felony_bool,
-            client.attending_school,
-            client.currently_employed,
-            client.substance_use,
-            client.time_unemployed,
-            client.need_mental_health_support_bool,
-        ])
+        X.append(
+            [
+                client.age,
+                client.work_experience,
+                client.canada_workex,
+                client.level_of_schooling,
+                client.fluent_english,
+                client.reading_english_scale,
+                client.speaking_english_scale,
+                client.writing_english_scale,
+                client.numeracy_scale,
+                client.computer_scale,
+                client.transportation_bool,
+                client.caregiver_bool,
+                client.housing,
+                client.income_source,
+                client.felony_bool,
+                client.attending_school,
+                client.currently_employed,
+                client.substance_use,
+                client.time_unemployed,
+                client.need_mental_health_support_bool,
+            ]
+        )
 
         # Success rate is the target variable
         y.append(case.success_rate)
@@ -119,7 +122,9 @@ def load_data():
     y = np.array(y)
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.3, random_state=42
+    )
+
     db.close()  # Always close the session after using it
     return X_train, X_test, y_train, y_test

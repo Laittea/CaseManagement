@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, Boolean, ForeignKey, CheckConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class ClientCase(Base):
     __tablename__ = "client_cases"
 
@@ -15,7 +16,9 @@ class ClientCase(Base):
     employment_related_financial_supports = Column(Boolean)
     employer_financial_supports = Column(Boolean)
     enhanced_referrals = Column(Boolean)
-    success_rate = Column(Integer, CheckConstraint("success_rate >= 0 AND success_rate <= 100"))
+    success_rate = Column(
+        Integer, CheckConstraint("success_rate >= 0 AND success_rate <= 100")
+    )
 
     client = relationship("Client", back_populates="cases")
     user = relationship("User", back_populates="cases")
