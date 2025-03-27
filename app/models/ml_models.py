@@ -21,10 +21,16 @@ class LogisticRegressionModel(MLModel):
         self.model = LogisticRegression(max_iter=200)
 
     def fit(self, X_train, y_train):
-        self.model.fit(X_train, y_train)
+        try:
+            self.model.fit(X_train, y_train)
+        except Exception as e:
+            raise ValueError(f"Error during model fitting in LogisticRegressionModel: {e}")
 
     def predict(self, X_test):
-        return self.model.predict(X_test)
+        try:
+            return self.model.predict(X_test)
+        except Exception as e:
+            raise ValueError(f"Error during model prediction in LogisticRegressionModel: {e}")
 
 
 class DecisionTreeModel(MLModel):
@@ -32,10 +38,16 @@ class DecisionTreeModel(MLModel):
         self.model = DecisionTreeClassifier(random_state=42)
 
     def fit(self, X_train, y_train):
-        self.model.fit(X_train, y_train)
+        try:
+            self.model.fit(X_train, y_train)
+        except Exception as e:
+            raise ValueError(f"Error during model fitting in DecisionTreeModel: {e}")
 
     def predict(self, X_test):
-        return self.model.predict(X_test)
+        try:
+            return self.model.predict(X_test)
+        except Exception as e:
+            raise ValueError(f"Error during model prediction in DecisionTreeModel: {e}")
 
 
 class RandomForestModel(MLModel):
@@ -43,10 +55,16 @@ class RandomForestModel(MLModel):
         self.model = RandomForestClassifier(random_state=42)
 
     def fit(self, X_train, y_train):
-        self.model.fit(X_train, y_train)
+        try:
+            self.model.fit(X_train, y_train)
+        except Exception as e:
+            raise ValueError(f"Error during model fitting in RandomForestModel: {e}")
 
     def predict(self, X_test):
-        return self.model.predict(X_test)
+        try:
+            return self.model.predict(X_test)
+        except Exception as e:
+            raise ValueError(f"Error during model prediction in RandomForestModel: {e}")
 
 
 def load_data():
@@ -58,6 +76,11 @@ def load_data():
     # Query all clients and their case data (success_rate from ClientCase)
     clients = db.query(Client).all()
     client_cases = db.query(ClientCase).all()
+    
+    # Check if data exists
+    if not clients or not client_cases:
+        db.close()
+        raise ValueError("No client or case data found in the database.")
 
     # Prepare the features (X) and target (y)
     X = []
