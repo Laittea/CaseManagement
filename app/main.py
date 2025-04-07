@@ -23,9 +23,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
+
 @app.get("/test", tags=["test"])
 def test_endpoint():
     return {"status": "ok", "message": "API is working!"}
+
 
 # Include routers
 app.include_router(auth_router)

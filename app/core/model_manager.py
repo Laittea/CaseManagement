@@ -29,10 +29,16 @@ class ModelManager:
     def switch_model(self, model_name: str):
         """Switch the active model."""
         if model_name not in self.available_models:
-            return {"status": "error", "message": f"Model '{model_name}' is not available."}, 400  # Return error with status code
+            return {
+                "status": "error",
+                "message": f"Model '{model_name}' is not available.",
+            }, 400  # Return error with status code
 
         self.current_model = self.available_models[model_name]
-        return {"status": "success", "message": f"Model switched to {model_name}"}, 200  # Return success with status code
+        return {
+            "status": "success",
+            "message": f"Model switched to {model_name}",
+        }, 200  # Return success with status code
 
     def get_current_model(self):
         """Get the current active model."""

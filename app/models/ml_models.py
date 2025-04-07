@@ -25,13 +25,17 @@ class LogisticRegressionModel(MLModel):
         try:
             self.model.fit(X_train, y_train)
         except Exception as e:
-            raise ValueError(f"Error during model fitting in LogisticRegressionModel: {e}")
+            raise ValueError(
+                f"Error during model fitting in LogisticRegressionModel: {e}"
+            )
 
     def predict(self, X_test):
         try:
             return self.model.predict(X_test)
         except Exception as e:
-            raise ValueError(f"Error during model prediction in LogisticRegressionModel: {e}")
+            raise ValueError(
+                f"Error during model prediction in LogisticRegressionModel: {e}"
+            )
 
 
 class DecisionTreeModel(MLModel):
@@ -77,7 +81,7 @@ def load_data():
     # Query all clients and their case data (success_rate from ClientCase)
     clients = db.query(Client).all()
     client_cases = db.query(ClientCase).all()
-    
+
     # Check if data exists
     if not clients or not client_cases:
         db.close()

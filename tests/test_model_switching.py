@@ -13,7 +13,9 @@ def admin_headers():
 
 def test_switch_model_valid(client, admin_headers):
     # Test that switching to a valid model works
-    response = client.post("/ml/switch-model", json={"model_name": "decision_tree"}, headers=admin_headers)
+    response = client.post(
+        "/ml/switch-model", json={"model_name": "decision_tree"}, headers=admin_headers
+    )
     assert response.status_code == 200
     assert response.json() == {
         "status": "success",
@@ -23,9 +25,14 @@ def test_switch_model_valid(client, admin_headers):
 
 def test_switch_model_invalid(client, admin_headers):
     # Test that switching to an invalid model returns an error
-    response = client.post("/ml/switch-model", json={"model_name": "invalid_model"}, headers=admin_headers)
+    response = client.post(
+        "/ml/switch-model", json={"model_name": "invalid_model"}, headers=admin_headers
+    )
     assert response.status_code == 400
-    assert response.json() == {"status": "error", "message": "Model 'invalid_model' is not available."}
+    assert response.json() == {
+        "status": "error",
+        "message": "Model 'invalid_model' is not available.",
+    }
 
 
 def test_get_current_model(client, admin_headers):
@@ -61,7 +68,7 @@ def test_prediction(client, admin_headers):
         "currently_employed": "false",
         "substance_use": "false",
         "time_unemployed": 6,
-        "need_mental_health_support_bool": "false"
+        "need_mental_health_support_bool": "false",
     }
 
     response = client.post("/ml/predict", json=data, headers=admin_headers)
