@@ -1,16 +1,12 @@
-from app.models.ml_models import (
-    LogisticRegressionModel,
-    DecisionTreeModel,
-    RandomForestModel,
-    load_data,
-)
+from app.models.ml_models import (DecisionTreeModel, LogisticRegressionModel,
+                                  RandomForestModel, load_data)
 
 
 class ModelManager:
     def __init__(self):
         # Load and train models initially
-        self.X_train, self.X_test, self.y_train, self.y_test = load_data()
-        if self.X_train is None or self.y_train is None:
+        self.x_train, self.x_test, self.y_train, self.y_test = load_data()
+        if self.x_train is None or self.y_train is None:
             raise RuntimeError("Failed to load training data.")
 
         self.available_models = {
@@ -21,7 +17,7 @@ class ModelManager:
 
         # Train the models
         for model in self.available_models.values():
-            model.fit(self.X_train, self.y_train)
+            model.fit(self.x_train, self.y_train)
 
         # Default model
         self.current_model = self.available_models["logistic_regression"]
@@ -47,3 +43,4 @@ class ModelManager:
     def get_available_models(self):
         """Get a list of available models."""
         return list(self.available_models.keys())
+

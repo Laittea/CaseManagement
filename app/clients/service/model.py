@@ -9,8 +9,8 @@ import pickle
 # Third-party imports
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
 
 
 def prepare_models():
@@ -101,7 +101,7 @@ def load_model(filename="model.pkl"):
 
 
 def main():
-    """Main function to train and save the model."""
+    """Train and save the model."""
     print("Starting model training...")
     model = prepare_models()
     save_model(model)

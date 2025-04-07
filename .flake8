@@ -1,9 +1,19 @@
 [flake8]
-max-line-length = 100
-exclude = .git,__pycache__,build,dist
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    .tox,
+    .nox,
+    .coverage,
+    build,
+    dist,
+    venv/,
+    site-packages/
 per-file-ignores =
     __init__.py: F401,D104
-    tests/*: D100,D101,D102,D103,D104,D105,D106,D107
-extend-ignore = E203, W503, B008, Q000
-docstring-convention = google
-max-complexity = 15 
+    tests/*: D100,D101,D102,D103,D104,D105,D106,D107,D400
+    # Ignore all docstring-related warnings in the entire project
+    *.py: D100,D101,D102,D103,D104,D105,D106,D107,D200,D205,D400
+extend-ignore = E203, W503, B008, Q000, E501
+max-complexity = 10

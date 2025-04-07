@@ -2,18 +2,18 @@
 Client service implementations following SOLID principles.
 """
 
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from sqlalchemy.orm import Session
-from app.models import Client, ClientCase
-from app.clients.schema import ClientUpdate, ServiceUpdate
-from app.clients.repository.client_repository import ClientRepository
+
 from app.clients.repository.case_repository import ClientCaseRepository
-from app.clients.service.interfaces import (
-    IClientQueryService,
-    IClientCommandService,
-    ICaseQueryService,
-    ICaseCommandService,
-)
+from app.clients.repository.client_repository import ClientRepository
+from app.clients.schema import ClientUpdate, ServiceUpdate
+from app.clients.service.interfaces import (ICaseCommandService,
+                                            ICaseQueryService,
+                                            IClientCommandService,
+                                            IClientQueryService)
+from app.models import Client, ClientCase
 
 
 class ClientQueryService(IClientQueryService):

@@ -1,8 +1,10 @@
-from fastapi import APIRouter, HTTPException, Response
 from typing import Dict
+
+from fastapi import APIRouter, Response
 from pydantic import BaseModel, ValidationError
-from app.core.model_manager import ModelManager
+
 from app.clients.schema import PredictionInput
+from app.core.model_manager import ModelManager
 
 # Initialize FastAPI router for ML-related endpoints
 router = APIRouter(prefix="/ml", tags=["ml_models"])

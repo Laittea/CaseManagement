@@ -1,8 +1,8 @@
 import pandas as pd
-from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.models import Client, User, ClientCase, UserRole
+
 from app.auth.router import get_password_hash
+from app.database import SessionLocal
+from app.models import Client, ClientCase, User, UserRole
 
 
 def initialize_database():
@@ -65,7 +65,7 @@ def initialize_database():
             df[col] = pd.to_numeric(df[col], errors="raise")
 
         # Process each row in CSV
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             # Create client
             client = Client(
                 age=int(row["age"]),

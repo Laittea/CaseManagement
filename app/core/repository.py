@@ -2,7 +2,8 @@
 Base repository interfaces for data access layer.
 """
 
-from typing import Generic, TypeVar, Optional, List, Any
+from typing import Any, Generic, List, Optional, TypeVar
+
 from sqlalchemy.orm import Session
 
 T = TypeVar("T")

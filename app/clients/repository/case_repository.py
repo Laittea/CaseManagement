@@ -2,11 +2,13 @@
 Client case repository implementation for data access operations.
 """
 
-from typing import List, Optional, Dict, Any
-from sqlalchemy.orm import Session
+from typing import Any, Dict, List, Optional
+
 from fastapi import HTTPException, status
-from app.models import ClientCase, User, Client
+from sqlalchemy.orm import Session
+
 from app.core.repository import IRepository
+from app.models import Client, ClientCase, User
 
 
 class ClientCaseRepository(IRepository[ClientCase]):
@@ -122,7 +124,9 @@ class ClientCaseRepository(IRepository[ClientCase]):
     ) -> List[ClientCase]:
         """Get cases filtered by service statuses."""
         query = db.query(ClientCase)
-        for service_name, status in service_filters.items():
-            if status is not None:
-                query = query.filter(getattr(ClientCase, service_name) == status)
+        for service_name, service_status in service_filters.items():
+            if service_status is not None:
+                query = query.filter(
+                    getattr(ClientCase, service_name) == service_status
+                )
         return query.all()

@@ -2,12 +2,14 @@
 Client repository implementation for data access operations.
 """
 
-from typing import List, Optional, Dict, Any
-from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from typing import Any, Dict, List, Optional
+
 from fastapi import HTTPException, status
-from app.models import Client, ClientCase
+from sqlalchemy import and_
+from sqlalchemy.orm import Session
+
 from app.core.repository import IRepository
+from app.models import Client, ClientCase
 
 
 class ClientRepository(IRepository[Client]):

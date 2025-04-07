@@ -2,10 +2,12 @@
 Service interfaces for client management following Interface Segregation Principle.
 """
 
-from typing import Protocol, List, Optional, Dict, Any
+from typing import Any, Dict, List, Protocol
+
 from sqlalchemy.orm import Session
-from app.models import Client, ClientCase
+
 from app.clients.schema import ClientUpdate, ServiceUpdate
+from app.models import Client, ClientCase
 
 
 class IClientQueryService(Protocol):

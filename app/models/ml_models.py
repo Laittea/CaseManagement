@@ -1,8 +1,9 @@
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
 from app.database import SessionLocal
 from app.models import Client, ClientCase
 
@@ -10,31 +11,31 @@ from app.models import Client, ClientCase
 class MLModel:
     """Base class for machine learning models."""
 
-    def fit(self, X_train, y_train):
-        pass
+    def fit(self, features_train, targets_train):
+        raise NotImplementedError
 
-    def predict(self, X_test):
-        pass
+    def predict(self, features_test):
+        raise NotImplementedError
 
 
 class LogisticRegressionModel(MLModel):
     def __init__(self):
         self.model = LogisticRegression(max_iter=200)
 
-    def fit(self, X_train, y_train):
+    def fit(self, features_train, targets_train):
         try:
-            self.model.fit(X_train, y_train)
-        except Exception as e:
+            self.model.fit(features_train, targets_train)
+        except Exception as error:
             raise ValueError(
-                f"Error during model fitting in LogisticRegressionModel: {e}"
+                f"Error during model fitting in LogisticRegressionModel: {error}"
             )
 
-    def predict(self, X_test):
+    def predict(self, features_test):
         try:
-            return self.model.predict(X_test)
-        except Exception as e:
+            return self.model.predict(features_test)
+        except Exception as error:
             raise ValueError(
-                f"Error during model prediction in LogisticRegressionModel: {e}"
+                f"Error during model prediction in LogisticRegressionModel: {error}"
             )
 
 
@@ -42,58 +43,62 @@ class DecisionTreeModel(MLModel):
     def __init__(self):
         self.model = DecisionTreeClassifier(random_state=42)
 
-    def fit(self, X_train, y_train):
+    def fit(self, features_train, targets_train):
         try:
-            self.model.fit(X_train, y_train)
-        except Exception as e:
-            raise ValueError(f"Error during model fitting in DecisionTreeModel: {e}")
+            self.model.fit(features_train, targets_train)
+        except Exception as error:
+            raise ValueError(
+                f"Error during model fitting in DecisionTreeModel: {error}"
+            )
 
-    def predict(self, X_test):
+    def predict(self, features_test):
         try:
-            return self.model.predict(X_test)
-        except Exception as e:
-            raise ValueError(f"Error during model prediction in DecisionTreeModel: {e}")
+            return self.model.predict(features_test)
+        except Exception as error:
+            raise ValueError(
+                f"Error during model prediction in DecisionTreeModel: {error}"
+            )
 
 
 class RandomForestModel(MLModel):
     def __init__(self):
         self.model = RandomForestClassifier(random_state=42)
 
-    def fit(self, X_train, y_train):
+    def fit(self, features_train, targets_train):
         try:
-            self.model.fit(X_train, y_train)
-        except Exception as e:
-            raise ValueError(f"Error during model fitting in RandomForestModel: {e}")
+            self.model.fit(features_train, targets_train)
+        except Exception as error:
+            raise ValueError(
+                f"Error during model fitting in RandomForestModel: {error}"
+            )
 
-    def predict(self, X_test):
+    def predict(self, features_test):
         try:
-            return self.model.predict(X_test)
-        except Exception as e:
-            raise ValueError(f"Error during model prediction in RandomForestModel: {e}")
+            return self.model.predict(features_test)
+        except Exception as error:
+            raise ValueError(
+                f"Error during model prediction in RandomForestModel: {error}"
+            )
 
 
-def load_data():
-    """Load and split the client and case data for training/testing."""
-
-    # Create a session to interact with the database
+def load_and_split_client_data():
+    """
+    Load and split the client and case data for training/testing.
+    """
     db = SessionLocal()
 
-    # Query all clients and their case data (success_rate from ClientCase)
-    clients = db.query(Client).all()
-    client_cases = db.query(ClientCase).all()
+    client_records = db.query(Client).all()
+    client_case_records = db.query(ClientCase).all()
 
-    # Check if data exists
-    if not clients or not client_cases:
+    if not client_records or not client_case_records:
         db.close()
         raise ValueError("No client or case data found in the database.")
 
-    # Prepare the features (X) and target (y)
-    X = []
-    y = []
+    features = []
+    targets = []
 
-    # Loop over each client and their corresponding case
-    for client, case in zip(clients, client_cases):
-        X.append(
+    for client, case in zip(client_records, client_case_records):
+        features.append(
             [
                 client.age,
                 client.work_experience,
@@ -117,18 +122,14 @@ def load_data():
                 client.need_mental_health_support_bool,
             ]
         )
+        targets.append(case.success_rate)
 
-        # Success rate is the target variable
-        y.append(case.success_rate)
+    features = np.array(features)
+    targets = np.array(targets)
 
-    # Convert to numpy arrays for model compatibility
-    X = np.array(X)
-    y = np.array(y)
-
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, random_state=42
+    features_train, features_test, targets_train, targets_test = train_test_split(
+        features, targets, test_size=0.3, random_state=42
     )
 
-    db.close()  # Always close the session after using it
-    return X_train, X_test, y_train, y_test
+    db.close()
+    return features_train, features_test, targets_train, targets_test
