@@ -39,7 +39,7 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
    docker-compose up -d
    ```
 
-3. Access the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs)
+3. Access the API documentation at [http://localhost:8080/docs](http://localhost:8080/docs)
 
 4. Log in as admin (username: `admin`, password: `admin123`)
 
