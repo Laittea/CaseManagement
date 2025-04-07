@@ -23,10 +23,14 @@ app = FastAPI(
     version="1.0.0",
 )
 
+@app.get("/test", tags=["test"])
+def test_endpoint():
+    return {"status": "ok", "message": "API is working!"}
+
 # Include routers
 app.include_router(auth_router)
 app.include_router(clients_router)
-app.include_router(ml_router) 
+app.include_router(ml_router)
 
 # Configure CORS middleware
 app.add_middleware(

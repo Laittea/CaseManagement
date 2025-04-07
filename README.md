@@ -1,57 +1,155 @@
-Team TicTech 
+# Case Management System
 
-Project -- Feature Development Backend: Create CRUD API's for Client
+## Project Overview
 
-User Story
+This project provides a backend API for a Case Management System that allows social workers to manage client information and predict client success rates based on various interventions.
+
+### User Story
 
 As a user of the backend API's, I want to call API's that can retrieve, update, and delete information of clients who have already registered with the CaseManagment service so that I more efficiently help previous clients make better decisions on how to be gainfully employed.
 
-Acceptance Criteria
-- Provide REST API endpoints so that the Frontend can use them to get information on an existing client.
-- Document how to use the REST API
-- Choose and create a database to hold client information
-- Add tests
+### Features
 
+- REST API endpoints for client information management
+- Machine learning model for predicting client success rates
+- Authentication and authorization system
+- SQLite database for data storage
+- Docker support for easy deployment
 
-This will contain the model used for the project that based on the input information will give the social workers the clients baseline level of success and what their success will be after certain interventions.
+## How to Use
 
-The model works off of dummy data of several combinations of clients alongside the interventions chosen for them as well as their success rate at finding a job afterward. The model will be updated by the case workers by inputing new data for clients with their updated outcome information, and it can be updated on a daily, weekly, or monthly basis.
+### Option 1: Running with Docker (Recommended)
 
-This also has an API file to interact with the front end, and logic in order to process the interventions coming from the front end. This includes functions to clean data, create a matrix of all possible combinations in order to get the ones with the highest increase of success, and output the results in a way the front end can interact with.
+#### Prerequisites
+- Docker installed on your system
+- Docker Compose installed on your system
 
--------------------------How to Use-------------------------
-1. In the virtual environment you've created for this project, install all dependencies in requirements.txt (pip install -r requirements.txt)
+#### Using Docker Compose
 
-2. Run the app (uvicorn app.main:app --reload)
+1. Clone the repository
+2. Navigate to the project directory
+3. Run the application using Docker Compose:
+   ```
+   docker-compose up
+   ```
+4. Access the API documentation at http://localhost:8000/docs
+5. Log in as admin (username: admin, password: admin123)
 
-3. Load data into database (python initialize_data.py)
+#### Using Docker Run
 
-4. Go to SwaggerUI (http://127.0.0.1:8000/docs)
+1. Build the Docker image:
+   ```
+   docker build -t case-management .
+   ```
+2. Run the container:
+   ```
+   docker run -d -p 8080:8000 --name case-management-api case-management
+   ```
+   This command will:
+   - Build and run the container in detached mode
+   - Map port 8080 on your host to port 8000 in the container
+   - Name the container "case-management-api"
+   - Automatically create the database tables and initialize sample data
 
-4. Log in as admin (username: admin password: admin123)
+3. Access the API documentation at http://localhost:8080/docs
+4. Log in as admin (username: admin, password: admin123)
 
-5. Click on each endpoint to use
--Create User (Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker")
+5. To stop and remove the container when done:
+   ```
+   docker stop case-management-api
+   docker rm case-management-api
+   ```
 
--Get clients (Display all the clients that are in the database)
+### Option 2: Running Locally
 
--Get client (Allow authorized users to search for a client by id. If the id is not in database, an error message will show.)
+1. Create a virtual environment for this project
+2. Install all dependencies in requirements.txt:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Run the app:
+   ```
+   uvicorn app.main:app --reload
+   ```
+4. Load data into database:
+   ```
+   python initialize_data.py
+   ```
+5. Go to SwaggerUI: http://127.0.0.1:8000/docs
+6. Log in as admin (username: admin, password: admin123)
 
--Update client (Allow authorized users to update a client's basic info by inputting in client_id and providing updated values.)
+## API Endpoints
 
--Delete client (Allow authorized users to delete a client by id. If an id is no longer in the database, an error message will show.)
+After logging in, you can use the following endpoints:
 
--Get clients by criteria (Allow authorized users to get a list of clients who meet a certain combination of criteria.)
+- **Create User**: Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker"
+- **Get clients**: Display all the clients that are in the database
+- **Get client**: Search for a client by id
+- **Update client**: Update a client's basic info by providing client_id and updated values
+- **Delete client**: Delete a client by id
+- **Get clients by criteria**: Get a list of clients who meet a certain combination of criteria
+- **Get Clients by services**: Get a list of clients who meet a certain combination of service statuses
+- **Get clients services**: View a client's services' status
+- **Get clients by success rate**: Search for clients whose cases have a success rate beyond a certain number
+- **Get clients by case worker**: View which clients are assigned to a specific case worker
+- **Update client services**: Update the service status of a case
+- **Create case assignment**: Create a new case assignment
 
--Get Clients by services (Allow authorized users to get a list of clients who meet a certain combination of service statuses.)
+## Docker Demo Instructions
 
--Get clients services (Allow authorized users to view a client's services' status.)
+This section provides step-by-step instructions for demonstrating the Docker setup.
 
--Get clients by success rate (Allow authorized users to search for clients whose cases have a success rate beyond a certain number.)
+### Docker Compose Demo (Recommended for Windows)
 
--Get clients by case worker (Allow users to view which clients are assigned to a specific case worker.)
+1. Open a terminal (PowerShell or Command Prompt) and navigate to the project directory
+2. Run: `docker-compose up`
+3. Show the container running with: `docker ps` or in Docker Desktop
+4. Open a browser and navigate to: http://localhost:8000/docs
+5. Demonstrate API functionality by logging in and using endpoints
+6. Stop the container with: `docker-compose down`
 
--Update client services (Allow users to update the service status of a case.)
+### Docker Run Demo
 
--Create case assignment (Allow authorized users to create a new case assignment.)
+1. Build the image: `docker build -t case-management .`
+2. Run the container: `docker run -d -p 8000:8000 --name case-management-api case-management`
+3. Show the container running: `docker ps` or in Docker Desktop
+4. Access the API: http://localhost:8000/docs
+5. Stop and remove the container: `docker stop case-management-api && docker rm case-management-api`
 
+### Troubleshooting Docker on Windows
+
+1. Make sure Docker Desktop is running
+2. If you encounter volume mounting issues, try using the Docker Desktop interface to manage volumes
+3. For permission issues, run your terminal as Administrator
+4. If the container fails to start, check the logs in Docker Desktop
+5. For database issues, the application is configured to store the SQLite database in a persistent volume
+
+#### Troubleshooting API Access
+
+If you're having trouble accessing the API or Swagger UI:
+
+1. Try using a different port by modifying the `ports` section in `docker-compose.yml`:
+   ```
+   ports:
+     - "8080:8000"
+   ```
+
+2. Try using a different browser or disabling browser extensions
+
+3. Try accessing the API using different URLs:
+   - http://localhost:8080/docs
+   - http://127.0.0.1:8080/docs
+   - http://[container-ip]:8000/docs (get container IP with `docker inspect`)
+
+4. Check if there are any firewall rules blocking access to the port
+
+5. Test if the API is accessible using the test endpoint:
+   ```
+   curl http://localhost:8080/test
+   ```
+
+6. If all else fails, try accessing the API through the Docker Desktop interface:
+   - Open Docker Desktop
+   - Go to the "Containers" tab
+   - Click on the "case-management-api" container
+   - Click on the "Open in browser" button next to the port mapping

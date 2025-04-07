@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: case-management-api
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./:/code
+    environment:
+      - DATABASE_URL=sqlite:///./sql_app.db
+      - SECRET_KEY=your-secret-key-for-docker-compose
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - DEBUG=true
+    command: >
+      bash -c "python initialize_data.py &&
+              uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
