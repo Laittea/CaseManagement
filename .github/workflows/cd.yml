@@ -39,13 +39,22 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t common-assessment-tool .
+        run: docker build -t case-management-api .
 
       - name: Run Docker container
         run: |
-          docker run -d -p 8000:8000 common-assessment-tool
-          sleep 10  # Wait for container to start
+          docker run -d -p 8080:8000 --name case-management-api case-management-api
+          sleep 15  # Wait for container to start
 
       - name: Test Docker container
         run: |
-          curl http://localhost:8000/docs
+          curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/docs
+          docker logs case-management-api
+
+      - name: Print Deployment Message
+        run: |
+          echo "========================"
+          echo "✓ Docker image built"
+          echo "✓ Container running"
+          echo "✓ API accessible"
+          echo "========================"
