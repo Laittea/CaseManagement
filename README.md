@@ -1,15 +1,12 @@
 # Case Management System
 
 ## Project Overview
-
 This project provides a backend API for a Case Management System that allows social workers to manage client information and predict client success rates based on various interventions.
 
 ### User Story
-
-As a user of the backend API's, I want to call API's that can retrieve, update, and delete information of clients who have already registered with the CaseManagment service so that I more efficiently help previous clients make better decisions on how to be gainfully employed.
+As a user of the backend API's, I want to call API's that can retrieve, update, and delete information of clients who have already registered with the CaseManagement service so that I more efficiently help previous clients make better decisions on how to be gainfully employed.
 
 ### Features
-
 - REST API endpoints for client information management
 - Machine learning model for predicting client success rates
 - Authentication and authorization system
@@ -21,43 +18,117 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
 ### Option 1: Running with Docker (Recommended)
 
 #### Prerequisites
-- Docker installed on your system
-- Docker Compose installed on your system
+- [Docker](https://docs.docker.com/get-docker/) installed on your system
+- [Docker Compose](https://docs.docker.com/compose/install/) installed on your system (optional for docker-compose method)
 
-#### Using Docker Compose
+#### Using Docker Compose (Simplest Method)
 
-1. Clone the repository
-2. Navigate to the project directory
-3. Run the application using Docker Compose:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Laittea/CaseManagement.git
+   cd CaseManagement
    ```
+
+2. Run the application using Docker Compose:
+   ```bash
    docker-compose up
    ```
-4. Access the API documentation at http://localhost:8000/docs
-5. Log in as admin (username: admin, password: admin123)
+   
+   - To run in detached mode (in the background):
+   ```bash
+   docker-compose up -d
+   ```
+
+3. Access the API documentation at [http://localhost:8000/docs](http://localhost:8000/docs)
+
+4. Log in as admin (username: `admin`, password: `admin123`)
+
+5. To stop the application:
+   ```bash
+   docker-compose down
+   ```
 
 #### Using Docker Run
 
-1. Build the Docker image:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Laittea/CaseManagement.git
+   cd CaseManagement
    ```
+
+2. Build the Docker image:
+   ```bash
    docker build -t case-management .
    ```
-2. Run the container:
-   ```
+
+3. Run the container:
+   ```bash
    docker run -d -p 8080:8000 --name case-management-api case-management
    ```
+   
    This command will:
    - Build and run the container in detached mode
    - Map port 8080 on your host to port 8000 in the container
    - Name the container "case-management-api"
    - Automatically create the database tables and initialize sample data
 
-3. Access the API documentation at http://localhost:8080/docs
-4. Log in as admin (username: admin, password: admin123)
+4. Access the API documentation at [http://localhost:8080/docs](http://localhost:8080/docs)
 
-5. To stop and remove the container when done:
-   ```
+5. Log in as admin (username: `admin`, password: `admin123`)
+
+6. To stop and remove the container when done:
+   ```bash
    docker stop case-management-api
    docker rm case-management-api
+   ```
+
+7. To view logs from the container:
+   ```bash
+   docker logs case-management-api
+   ```
+
+8. To access a shell inside the running container:
+   ```bash
+   docker exec -it case-management-api bash
+   ```
+
+### Docker Environment Variables (Optional)
+
+You can customize the application behavior by passing environment variables to the Docker container:
+
+```bash
+docker run -d -p 8080:8000 \
+  -e DATABASE_URL=sqlite:///./app.db \
+  -e SECRET_KEY=your_custom_secret_key \
+  -e ALGORITHM=HS256 \
+  -e ACCESS_TOKEN_EXPIRE_MINUTES=30 \
+  --name case-management-api case-management
+```
+
+### Troubleshooting Docker
+
+1. If you encounter port conflicts:
+   ```bash
+   docker run -d -p 8081:8000 --name case-management-api case-management
+   ```
+   Then access the API at [http://localhost:8081/docs](http://localhost:8081/docs)
+
+2. To check if the container is running:
+   ```bash
+   docker ps
+   ```
+
+3. To view container logs:
+   ```bash
+   docker logs case-management-api
+   ```
+
+4. To rebuild the container if you've made changes:
+   ```bash
+   docker stop case-management-api
+   docker rm case-management-api
+   docker build -t case-management .
+   docker run -d -p 8080:8000 --name case-management-api case-management
    ```
 
 ### Option 2: Running Locally
@@ -79,9 +150,7 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
 6. Log in as admin (username: admin, password: admin123)
 
 ## API Endpoints
-
 After logging in, you can use the following endpoints:
-
 - **Create User**: Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker"
 - **Get clients**: Display all the clients that are in the database
 - **Get client**: Search for a client by id
