@@ -1,5 +1,9 @@
-from app.models.ml_models import (DecisionTreeModel, LogisticRegressionModel,
-                                  RandomForestModel, load_data)
+from app.models.ml_models import (
+    DecisionTreeModel,
+    LogisticRegressionModel,
+    RandomForestModel,
+    load_data,
+)
 
 
 class ModelManager:
@@ -43,4 +47,3 @@ class ModelManager:
     def get_available_models(self):
         """Get a list of available models."""
         return list(self.available_models.keys())
-

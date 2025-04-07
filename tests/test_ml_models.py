@@ -1,8 +1,11 @@
 import pytest
 
 from app.core.model_manager import load_data  # Ensure this loads the real data
-from app.models.ml_models import (DecisionTreeModel, LogisticRegressionModel,
-                                  RandomForestModel)
+from app.models.ml_models import (
+    DecisionTreeModel,
+    LogisticRegressionModel,
+    RandomForestModel,
+)
 
 # Load the real dataset (features and success rate)
 X_train, X_test, y_train, y_test = load_data()

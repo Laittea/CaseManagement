@@ -11,12 +11,19 @@ from sqlalchemy.orm import Session
 from app.auth.router import get_admin_user, get_current_user
 from app.clients.repository.case_repository import ClientCaseRepository
 from app.clients.repository.client_repository import ClientRepository
-from app.clients.schema import (ClientListResponse, ClientResponse,
-                                ClientUpdate, ServiceResponse, ServiceUpdate)
-from app.clients.service.client_service import (CaseCommandService,
-                                                CaseQueryService,
-                                                ClientCommandService,
-                                                ClientQueryService)
+from app.clients.schema import (
+    ClientListResponse,
+    ClientResponse,
+    ClientUpdate,
+    ServiceResponse,
+    ServiceUpdate,
+)
+from app.clients.service.client_service import (
+    CaseCommandService,
+    CaseQueryService,
+    ClientCommandService,
+    ClientQueryService,
+)
 from app.database import get_db
 from app.models import User
 
