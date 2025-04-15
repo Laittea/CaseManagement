@@ -150,13 +150,13 @@ docker run -d -p 8080:8000 \
 5. Go to SwaggerUI: http://127.0.0.1:8000/docs
 6. Log in as admin (username: admin, password: admin123)
 
-## AWS Deployment
+## AWS EC2 Deployment
 
-This application is automatically deployed to AWS using GitHub Actions. The deployment process is triggered whenever a new Release is created from the master branch.
+This application is automatically deployed to AWS EC2 using GitHub Actions. The deployment process is triggered whenever a new Release is created from the master branch.
 
 ### Accessing the Public Endpoint
 
-The application is deployed to AWS ECS and is accessible through a public endpoint. The endpoint URL is added to each GitHub Release description after deployment is complete.
+The application is deployed to an AWS EC2 instance and is accessible through the instance's public IP or DNS. The endpoint URL is added to each GitHub Release description after deployment is complete.
 
 To access the deployed application:
 1. Go to the [Releases page](https://github.com/Laittea/CaseManagement/releases) on GitHub
@@ -166,13 +166,14 @@ To access the deployed application:
 ### Deployment Process
 
 The deployment process includes the following steps:
-1. Building a Docker image
-2. Pushing the image to Amazon ECR
-3. Updating the ECS service with the new image
-4. Waiting for the deployment to stabilize
-5. Updating the release with the public endpoint URL
+1. Connecting to the EC2 instance via SSH
+2. Pulling the latest code from the repository
+3. Building a Docker image on the EC2 instance
+4. Running the Docker container
+5. Verifying the deployment
+6. Updating the release with the public endpoint URL
 
-Note: The deployment uses Amazon ECS (Elastic Container Service) without a load balancer. The public endpoint is configured directly in the GitHub Secrets.
+For detailed setup instructions, see the [AWS EC2 Deployment Setup Guide](docs/aws-ec2-deployment-setup.md).
 
 ## API Endpoints
 After logging in, you can use the following endpoints:
