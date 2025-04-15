@@ -22,9 +22,12 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2.pem
+          # Decode the base64-encoded private key
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/ec2.pem
           chmod 600 ~/.ssh/ec2.pem
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          # Test SSH connection
+          ssh -i ~/.ssh/ec2.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} echo "SSH connection successful"
 
       - name: Deploy to EC2
         env:
@@ -106,3 +109,4 @@ jobs:
               release_id: releaseId,
               body: `${context.payload.release.body}\n\n## Deployment Info\nThe application has been deployed to: ${endpoint}`
             });
+
