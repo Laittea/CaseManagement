@@ -45,7 +45,10 @@ jobs:
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && \
             sudo apt-get update && \
             sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
-            sudo usermod -aG docker \$USER"
+            sudo systemctl start docker && \
+            sudo systemctl enable docker && \
+            sudo usermod -aG docker \$USER && \
+            newgrp docker"
 
           # Create deployment script
           cat > deploy.sh << 'EOF'
@@ -53,6 +56,13 @@ jobs:
           set -e
 
           echo "Starting deployment of Case Management API version $RELEASE_VERSION"
+
+          # Verify Docker is running
+          if ! sudo systemctl is-active --quiet docker; then
+            echo "Starting Docker daemon..."
+            sudo systemctl start docker
+            sleep 5  # Give Docker a moment to start
+          fi
 
           # Stop and remove existing container if it exists
           if sudo docker ps -a | grep -q case-management-api; then
