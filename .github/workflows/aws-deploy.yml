@@ -35,13 +35,15 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           RELEASE_VERSION: ${{ github.event.release.tag_name }}
         run: |
-          # Install Docker using apt directly
+          # Install Docker using the official convenience script
           ssh -i ~/.ssh/ec2.pem $EC2_USER@$EC2_HOST "if ! command -v docker &> /dev/null; then \
-            sudo apt-get update && \
-            sudo apt-get install -y docker.io && \
+            echo 'Installing Docker...' && \
+            curl -fsSL https://get.docker.com -o get-docker.sh && \
+            sudo sh get-docker.sh && \
             sudo systemctl start docker && \
             sudo systemctl enable docker && \
-            sudo usermod -aG docker \$USER; \
+            sudo usermod -aG docker \$USER && \
+            echo 'Docker installed successfully'; \
           else \
             echo 'Docker is already installed'; \
           fi"
@@ -50,6 +52,12 @@ jobs:
           cat > deploy.sh << 'EOF'
           #!/bin/bash
           set -e
+
+          # Make sure RELEASE_VERSION is set
+          if [ -z "$RELEASE_VERSION" ]; then
+            echo "Error: RELEASE_VERSION environment variable is not set"
+            exit 1
+          fi
 
           echo "Starting deployment of Case Management API version $RELEASE_VERSION"
 
@@ -71,16 +79,16 @@ jobs:
           cd ~/CaseManagement || mkdir -p ~/CaseManagement && cd ~/CaseManagement
           if [ -d ".git" ]; then
             git fetch --all
-            git checkout $RELEASE_VERSION
+            git checkout "$RELEASE_VERSION"
           else
             git clone https://github.com/Laittea/CaseManagement.git .
-            git checkout $RELEASE_VERSION
+            git checkout "$RELEASE_VERSION"
           fi
 
           # Build and start the Docker container
           echo "Building and starting Docker container"
-          sudo docker build -t case-management-api:$RELEASE_VERSION .
-          sudo docker run -d -p 8080:8000 --name case-management-api case-management-api:$RELEASE_VERSION
+          sudo docker build -t "case-management-api:$RELEASE_VERSION" .
+          sudo docker run -d -p 8080:8000 --name case-management-api "case-management-api:$RELEASE_VERSION"
 
           # Verify the container is running
           echo "Verifying container is running"
@@ -100,7 +108,7 @@ jobs:
           scp -i ~/.ssh/ec2.pem deploy.sh $EC2_USER@$EC2_HOST:~/deploy.sh
 
           # Execute deployment script on EC2 instance
-          ssh -i ~/.ssh/ec2.pem $EC2_USER@$EC2_HOST "chmod +x ~/deploy.sh && RELEASE_VERSION=$RELEASE_VERSION ~/deploy.sh"
+          ssh -i ~/.ssh/ec2.pem $EC2_USER@$EC2_HOST "chmod +x ~/deploy.sh && export RELEASE_VERSION='$RELEASE_VERSION' && ~/deploy.sh"
 
       - name: Get public endpoint
         id: get-endpoint
@@ -127,8 +135,3 @@ jobs:
               release_id: releaseId,
               body: `${context.payload.release.body}\n\n## Deployment Info\nThe application has been deployed to: ${endpoint}`
             });
-
-
-
-
-
