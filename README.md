@@ -12,6 +12,7 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
 - Authentication and authorization system
 - SQLite database for data storage
 - Docker support for easy deployment
+- Continuous Deployment to AWS
 
 ## How to Use
 
@@ -33,7 +34,7 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
    ```bash
    docker-compose up
    ```
-   
+
    - To run in detached mode (in the background):
    ```bash
    docker-compose up -d
@@ -65,7 +66,7 @@ As a user of the backend API's, I want to call API's that can retrieve, update, 
    ```bash
    docker run -d -p 8080:8000 --name case-management-api case-management
    ```
-   
+
    This command will:
    - Build and run the container in detached mode
    - Map port 8080 on your host to port 8000 in the container
@@ -148,6 +149,30 @@ docker run -d -p 8080:8000 \
    ```
 5. Go to SwaggerUI: http://127.0.0.1:8000/docs
 6. Log in as admin (username: admin, password: admin123)
+
+## AWS Deployment
+
+This application is automatically deployed to AWS using GitHub Actions. The deployment process is triggered whenever a new Release is created from the master branch.
+
+### Accessing the Public Endpoint
+
+The application is deployed to AWS ECS and is accessible through a public endpoint. The endpoint URL is added to each GitHub Release description after deployment is complete.
+
+To access the deployed application:
+1. Go to the [Releases page](https://github.com/Laittea/CaseManagement/releases) on GitHub
+2. Find the latest release
+3. The deployment URL will be listed in the release description under "Deployment Info"
+
+### Deployment Process
+
+The deployment process includes the following steps:
+1. Building a Docker image
+2. Pushing the image to Amazon ECR
+3. Updating the ECS service with the new image
+4. Waiting for the deployment to stabilize
+5. Updating the release with the public endpoint URL
+
+Note: The deployment uses Amazon ECS (Elastic Container Service) without a load balancer. The public endpoint is configured directly in the GitHub Secrets.
 
 ## API Endpoints
 After logging in, you can use the following endpoints:
