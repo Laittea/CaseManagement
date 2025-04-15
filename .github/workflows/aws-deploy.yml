@@ -21,13 +21,36 @@ jobs:
 
       - name: Set up SSH
         run: |
+          # Create .ssh directory and set permissions
           mkdir -p ~/.ssh
-          # Decode the base64-encoded private key
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/ec2.pem
+          chmod 700 ~/.ssh
+          
+          # Debug: Check if EC2_SSH_KEY is not empty
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "Error: EC2_SSH_KEY is empty"
+            exit 1
+          fi
+          
+          # Write key file with explicit redirection
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ec2.pem
+          
+          # Debug: Check if key file was created and not empty
+          if [ ! -s ~/.ssh/ec2.pem ]; then
+            echo "Error: ec2.pem is empty or not created"
+            exit 1
+          fi
+          
+          # Set strict permissions on key file
           chmod 600 ~/.ssh/ec2.pem
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          # Test SSH connection
-          ssh -i ~/.ssh/ec2.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} echo "SSH connection successful"
+          
+          # Debug: Show key file permissions
+          ls -la ~/.ssh/ec2.pem
+          
+          # Add host key without strict checking
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          
+          # Test SSH connection with verbose output
+          ssh -v -i ~/.ssh/ec2.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH connection test successful'"
 
       - name: Deploy to EC2
         env:
@@ -42,11 +65,29 @@ jobs:
 
           echo "Starting deployment of Case Management API version $RELEASE_VERSION"
 
+          # Install Docker if not present
+          if ! command -v docker &> /dev/null; then
+              echo "Docker not found. Installing Docker..."
+              sudo apt-get update
+              sudo apt-get install -y ca-certificates curl gnupg
+              sudo install -m 0755 -d /etc/apt/keyrings
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+              sudo chmod a+r /etc/apt/keyrings/docker.gpg
+              echo \
+                "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+                "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+                sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+              sudo apt-get update
+              sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+              sudo usermod -aG docker $USER
+              echo "Docker installed successfully"
+          fi
+
           # Stop and remove existing container if it exists
-          if docker ps -a | grep -q case-management-api; then
+          if sudo docker ps -a | grep -q case-management-api; then
             echo "Stopping and removing existing container"
-            docker stop case-management-api || true
-            docker rm case-management-api || true
+            sudo docker stop case-management-api || true
+            sudo docker rm case-management-api || true
           fi
 
           # Pull the latest code
@@ -61,17 +102,17 @@ jobs:
 
           # Build and start the Docker container
           echo "Building and starting Docker container"
-          docker build -t case-management-api:$RELEASE_VERSION .
-          docker run -d -p 8080:8000 --name case-management-api case-management-api:$RELEASE_VERSION
+          sudo docker build -t case-management-api:$RELEASE_VERSION .
+          sudo docker run -d -p 8080:8000 --name case-management-api case-management-api:$RELEASE_VERSION
 
           # Verify the container is running
           echo "Verifying container is running"
           sleep 10
-          if docker ps | grep -q case-management-api; then
+          if sudo docker ps | grep -q case-management-api; then
             echo "Container is running successfully"
           else
             echo "Container failed to start"
-            docker logs case-management-api
+            sudo docker logs case-management-api
             exit 1
           fi
 
@@ -109,4 +150,7 @@ jobs:
               release_id: releaseId,
               body: `${context.payload.release.body}\n\n## Deployment Info\nThe application has been deployed to: ${endpoint}`
             });
+
+
+
 
