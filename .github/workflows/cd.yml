@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Docker Validation Pipeline
 
 on:
   push:
@@ -31,8 +31,8 @@ jobs:
         run: |
           python -m pytest tests/
 
-  deploy:
-    needs: test # This ensures deploy only runs if tests pass
+  docker-validate:
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -51,10 +51,13 @@ jobs:
           curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/docs
           docker logs case-management-api
 
-      - name: Print Deployment Message
+      - name: Print Validation Message
         run: |
           echo "========================"
           echo "✓ Docker image built"
           echo "✓ Container running"
           echo "✓ API accessible"
+          echo "✓ Docker validation complete"
           echo "========================"
+          echo "Note: This workflow only validates the Docker build."
+          echo "Actual deployment to AWS happens when a Release is created."
