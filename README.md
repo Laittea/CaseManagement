@@ -173,8 +173,6 @@ The deployment process includes the following steps:
 5. Verifying the deployment
 6. Updating the release with the public endpoint URL
 
-For detailed setup instructions, see the [AWS EC2 Deployment Setup Guide](docs/aws-ec2-deployment-setup.md).
-
 ## API Endpoints
 After logging in, you can use the following endpoints:
 - **Create User**: Only users in admin role can create new users. The role field needs to be either "admin" or "case_worker"
