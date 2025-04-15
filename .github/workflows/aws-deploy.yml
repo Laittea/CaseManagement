@@ -21,36 +21,14 @@ jobs:
 
       - name: Set up SSH
         run: |
-          # Create .ssh directory and set permissions
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          
-          # Debug: Check if EC2_SSH_KEY is not empty
-          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
-            echo "Error: EC2_SSH_KEY is empty"
-            exit 1
-          fi
-          
-          # Write key file with explicit redirection
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > ~/.ssh/ec2.pem
-          
-          # Debug: Check if key file was created and not empty
-          if [ ! -s ~/.ssh/ec2.pem ]; then
-            echo "Error: ec2.pem is empty or not created"
-            exit 1
-          fi
-          
-          # Set strict permissions on key file
+          # Store key directly without base64 decode
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2.pem
           chmod 600 ~/.ssh/ec2.pem
-          
-          # Debug: Show key file permissions
-          ls -la ~/.ssh/ec2.pem
-          
-          # Add host key without strict checking
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
-          
-          # Test SSH connection with verbose output
-          ssh -v -i ~/.ssh/ec2.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH connection test successful'"
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          # Test connection
+          ssh -i ~/.ssh/ec2.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH connection test successful'"
 
       - name: Deploy to EC2
         env:
